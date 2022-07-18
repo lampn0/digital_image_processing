@@ -18,9 +18,9 @@ if __name__ == "__main__":
     if len(sys.argv) == 3:
         alpha = float(sys.argv[1])
         beta = int(sys.argv[2])
-    img = cv2.imread('1.png')  # [height, width, channel]
+    img = cv2.imread('../images/2021-03-14_orig.jpg')  # [height, width, channel]
 
     # change image brightness g(x,y) = alpha*f(x,y) + beta
     img_new = change_brightness(img, alpha, beta)
 
-    cv2.imwrite('1_new.png', img_new)
+    cv2.imwrite('../results/2021-03-14_orig.jpg', img_new)
