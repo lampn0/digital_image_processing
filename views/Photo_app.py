@@ -1,8 +1,11 @@
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QDialog, QApplication, QMainWindow, QFileDialog
+from PyQt5.QtWidgets import QDialog, QApplication, QMainWindow, QFileDialog, QLabel
 from PyQt5.QtGui import QPixmap
 from PyQt5.uic import loadUi
+
+from PyQt5.QtGui import QResizeEvent
+
 import pickle, argparse, re, sys
 import array
 import random
@@ -21,8 +24,51 @@ class MainWindow(QMainWindow):
 
     def openFile(self):
         fname = QFileDialog.getOpenFileName(self, 'Open file', '', 'Images (*.png *.jpg)')
-        self.display.setPixmap(QPixmap(fname[0]))
+        # self.display.setPixmap(QPixmap(fname[0]))
+        # self.label_name.setText(fname[0])
+        # self.display.setPixmap(QPixmap(fname[0]))
         self.label_name.setText(fname[0])
+        self.display = Label()
+        self.display.setPixmap(QPixmap(fname[0]))
+
+    def editImage(self):
+        editimage = EditWindow()
+        widget.addWidget(editimage)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+
+class Label(QLabel):
+    def __init__(self):
+        super(Label, self).__init__()
+        self.pixmap_width: int = 1
+        self.pixmapHeight: int = 1
+
+    def setPixmap(self, pm: QPixmap) -> None:
+        self.pixmap_width = pm.width()
+        self.pixmapHeight = pm.height()
+
+        self.updateMargins()
+        super(Label, self).setPixmap(pm)
+
+    def resizeEvent(self, a0: QResizeEvent) -> None:
+        self.updateMargins()
+        super(Label, self).resizeEvent(a0)
+
+    def updateMargins(self):
+        if self.pixmap() is None:
+                return
+        pixmapWidth = self.pixmap().width()
+        pixmapHeight = self.pixmap().height()
+        if pixmapWidth <= 0 or pixmapHeight <= 0:
+            return
+        w, h = self.width(), self.height()
+        if w <= 0 or h <= 0:
+            return
+        if w * pixmapHeight > h * pixmapWidth:
+            m = int((w - (pixmapWidth * h / pixmapHeight)) / 2)
+            self.setContentsMargins(m, 0, m, 0)
+        else:
+            m = int((h - (pixmapHeight * w / pixmapWidth)) / 2)
+            self.setContentsMargins(0, m, 0, m)
 
 
     #     self.browser.clicked.connect(self.browserfiles)
@@ -32,11 +78,6 @@ class MainWindow(QMainWindow):
     #     self.mahoa.clicked.connect(self.encrypt_img)
     #     self.giaima.clicked.connect(self.decrypt_img)
     #     self.refresh.clicked.connect(self.refresh_bt)
-
-    def editImage(self):
-        editimage = EditWindow()
-        widget.addWidget(editimage)
-        widget.setCurrentIndex(widget.currentIndex()+1)
 
 
 class EditWindow(QDialog):

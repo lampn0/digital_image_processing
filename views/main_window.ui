@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1366</width>
-    <height>768</height>
+    <width>1371</width>
+    <height>775</height>
    </rect>
   </property>
   <property name="font">
@@ -25,7 +25,7 @@
       <x>9</x>
       <y>10</y>
       <width>1341</width>
-      <height>91</height>
+      <height>92</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -40,7 +40,8 @@
         </font>
        </property>
        <property name="styleSheet">
-        <string notr="true">color:rgb(255, 0, 0)</string>
+        <string notr="true">
+color: rgb(0, 0, 127);</string>
        </property>
        <property name="frameShape">
         <enum>QFrame::NoFrame</enum>
@@ -68,7 +69,7 @@
           <enum>Qt::Horizontal</enum>
          </property>
          <property name="sizeType">
-          <enum>QSizePolicy::Fixed</enum>
+          <enum>QSizePolicy::Expanding</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
@@ -136,8 +137,8 @@
      <rect>
       <x>20</x>
       <y>120</y>
-      <width>1341</width>
-      <height>611</height>
+      <width>1321</width>
+      <height>571</height>
      </rect>
     </property>
     <property name="maximumSize">
@@ -171,8 +172,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1366</width>
-     <height>21</height>
+     <width>1371</width>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
