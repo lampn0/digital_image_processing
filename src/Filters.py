@@ -126,8 +126,10 @@ class Filter:
         np.set_printoptions(precision=5)
         np.set_printoptions(suppress=True)
 
-        im1 = cv.imread('../images/LennaBL.tif')
-        im2 = cv.imread('../images/LennaBW.tif')
+        # im1 = cv.imread('../images/LennaBL.tif')
+        # im2 = cv.imread('../images/LennaBW.tif')
+        im1 = cv.imread('../images/2021-03-14_blur.jpg')
+        im2 = cv.imread('../images/2021-03-14_dark.jpg')
         I1 = np.float32(cv.cvtColor(im1, cv.COLOR_BGR2GRAY) / 255)
         I2 = np.float32(cv.cvtColor(im2, cv.COLOR_BGR2GRAY) / 255)
 
