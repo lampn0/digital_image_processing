@@ -5,6 +5,9 @@ from matplotlib.image import imread
 from scipy import ndimage
 import matplotlib.pyplot as plt
 from PIL import Image
+import time
+import llf
+
 
 class Filter:
     def Gaussian(self):
@@ -103,9 +106,9 @@ class Filter:
     def Sobel(self):
         # Here we read the image and bring it as an array
 
-        im = Image.open('../images/Bk2017.jpg')
-        im.save('../images/Bk2017.png')
-        original_image = imread("../images/Bk2017.png")
+        im = Image.open('../images/shape.jpg')
+        im.save('../images/shape.png')
+        original_image = imread("../images/shape.png")
 
         # Next we apply the Sobel filter in the x and y directions to then calculate the output image
         dx, dy = ndimage.sobel(original_image, axis=0), ndimage.sobel(original_image, axis=1)
@@ -119,6 +122,34 @@ class Filter:
         plt.xticks([]), plt.yticks([])
         plt.show()
 
+    def LaplacianFilter(self):
+        np.set_printoptions(precision=5)
+        np.set_printoptions(suppress=True)
+
+        im1 = cv.imread('../images/LennaBL.tif')
+        im2 = cv.imread('../images/LennaBW.tif')
+        I1 = np.float32(cv.cvtColor(im1, cv.COLOR_BGR2GRAY) / 255)
+        I2 = np.float32(cv.cvtColor(im2, cv.COLOR_BGR2GRAY) / 255)
+
+        sigma = 0.1
+        N = 4
+        fact = -0.75
+        t = time.time()
+
+        # Filtering
+        print(I1.shape)
+        print(I2.shape)
+        im_e = llf.xllf(I1, I2, sigma, fact, N)
+        im_ergb = llf.repeat(im_e)
+        elapsed = time.time() - t
+        print(elapsed)
+
+        # plot the image
+        im_con = np.concatenate((im1 / 255, im2 / 255, im_ergb), axis=1)
+        imgplt = plt.imshow(im_con)
+
+        plt.show()
+
 ans=True
 test = Filter()
 
@@ -129,10 +160,10 @@ while ans:
     3.Bo loc Trung Binh
     4.Bo loc Bilateral
     5.Bo loc Sobel
-    6.Exit/Quit
+    6.Bo loc Laplacian
+    7.Exit/Quit
     """)
-    # ans= input("Input your choice: ")
-    ans = "5"
+    ans= input("Input your choice: ")
     if ans=="1":
         test.Gaussian()
     elif ans=="2":
@@ -144,10 +175,11 @@ while ans:
     elif ans=="5":
         test.Sobel()
     elif ans=="6":
+        test.LaplacianFilter()
+    elif ans=="7":
         print("Exit!")
         ans = None
     else:
         print("\n Not Valid Choice Try again")
 
-    ans = None
 
