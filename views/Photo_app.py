@@ -24,12 +24,12 @@ class MainWindow(QMainWindow):
 
     def openFile(self):
         fname = QFileDialog.getOpenFileName(self, 'Open file', '', 'Images (*.png *.jpg)')
-        # self.display.setPixmap(QPixmap(fname[0]))
-        # self.label_name.setText(fname[0])
-        # self.display.setPixmap(QPixmap(fname[0]))
-        self.label_name.setText(fname[0])
-        self.display = Label()
         self.display.setPixmap(QPixmap(fname[0]))
+        self.label_name.setText(fname[0])
+
+        # self.label_name.setText(fname[0])
+        # self.display = Label()
+        # self.display.setPixmapNew(QPixmap(fname[0]))
 
     def editImage(self):
         editimage = EditWindow()
@@ -42,7 +42,7 @@ class Label(QLabel):
         self.pixmap_width: int = 1
         self.pixmapHeight: int = 1
 
-    def setPixmap(self, pm: QPixmap) -> None:
+    def setPixmapNew(self, pm: QPixmap) -> None:
         self.pixmap_width = pm.width()
         self.pixmapHeight = pm.height()
 

@@ -1,12 +1,15 @@
 import cv2 as cv
 import numpy as np
 from matplotlib import pyplot as plt
+from matplotlib.image import imread
+from scipy import ndimage
+import matplotlib.pyplot as plt
 
 class Filter:
     def Gaussian(self):
         # Load and blur image
-        img = cv.imread('25.png')
-        img2 = cv.imread('25.png')
+        img = cv.imread("../images/2021-03-14_orig.jpg")
+        img2 = cv.imread("../images/2021-03-14_orig.jpg")
         blur = cv.GaussianBlur(img, (5, 5), 0)
         blur2 = cv.GaussianBlur(img2, (5, 5), 0)
 
@@ -51,8 +54,8 @@ class Filter:
         plt.show()
     def TrungBinh(self):
         # Load and blur image
-        img = cv.imread('25.png')
-        img2 = cv.imread('25.png')
+        img = cv.imread("../images/2021-03-14_orig.jpg")
+        img2 = cv.imread("../images/2021-03-14_orig.jpg")
         blur = cv.blur(img, (5, 5))
         blur2 = cv.blur(img2, (5, 5))
 
@@ -74,8 +77,8 @@ class Filter:
         plt.show()
     def Bilateral(self):
         # Load and blur image
-        img = cv.imread('25.png')
-        img2 = cv.imread('25.png')
+        img = cv.imread("../images/2021-03-14_orig.jpg")
+        img2 = cv.imread("../images/2021-03-14_orig.jpg")
         blur = cv.bilateralFilter(img, 9, 75, 75)
         blur2 = cv.bilateralFilter(img, 9, 75, 75)
 
@@ -96,15 +99,32 @@ class Filter:
         plt.xticks([]), plt.yticks([])
         plt.show()
 
+    def Sobel(self):
+        # Here we read the image and bring it as an array
+        original_image = imread("../images/2021-03-14_orig.jpg")
+
+        # Next we apply the Sobel filter in the x and y directions to then calculate the output image
+        dx, dy = ndimage.sobel(original_image, axis=0), ndimage.sobel(original_image, axis=1)
+        sobel_filtered_image = np.hypot(dx, dy)  # is equal to ( dx ^ 2 + dy ^ 2 ) ^ 0.5
+        sobel_filtered_image_1 = sobel_filtered_image / np.max(sobel_filtered_image)  # normalization step
+
+        plt.subplot(121), plt.imshow(original_image), plt.title('Original')
+        plt.xticks([]), plt.yticks([])
+        plt.subplot(122), plt.imshow(sobel_filtered_image_1), plt.title('Sobel Filter')
+        plt.xticks([]), plt.yticks([])
+        plt.show()
+
 ans=True
 test = Filter()
+
 while ans:
     print("""
     1.Bo loc Gaussian
     2.Bo loc Trung Vi
     3.Bo loc Trung Binh
     4.Bo loc Bilateral
-    5.Exit/Quit
+    5.Bo loc Sobel
+    6.Exit/Quit
     """)
     ans= input("Input your choice: ")
     if ans=="1":
@@ -116,6 +136,8 @@ while ans:
     elif ans=="4":
         test.Bilateral()
     elif ans=="5":
+        test.Sobel()
+    elif ans=="6":
         print("Bye")
         ans = None
     else:
