@@ -1,9 +1,10 @@
 import cv2 as cv
 import numpy as np
-from matplotlib import pyplot as plt
+#from matplotlib import pyplot as plt
 from matplotlib.image import imread
 from scipy import ndimage
 import matplotlib.pyplot as plt
+from PIL import Image
 
 class Filter:
     def Gaussian(self):
@@ -101,16 +102,20 @@ class Filter:
 
     def Sobel(self):
         # Here we read the image and bring it as an array
-        original_image = imread("../images/2021-03-14_orig.jpg")
+
+        im = Image.open('../images/Bk2017.jpg')
+        im.save('../images/Bk2017.png')
+        original_image = imread("../images/Bk2017.png")
 
         # Next we apply the Sobel filter in the x and y directions to then calculate the output image
         dx, dy = ndimage.sobel(original_image, axis=0), ndimage.sobel(original_image, axis=1)
         sobel_filtered_image = np.hypot(dx, dy)  # is equal to ( dx ^ 2 + dy ^ 2 ) ^ 0.5
-        sobel_filtered_image_1 = sobel_filtered_image / np.max(sobel_filtered_image)  # normalization step
+        sobel_filtered_image = sobel_filtered_image / np.max(sobel_filtered_image)  # normalization step
 
         plt.subplot(121), plt.imshow(original_image), plt.title('Original')
+        plt.imshow
         plt.xticks([]), plt.yticks([])
-        plt.subplot(122), plt.imshow(sobel_filtered_image_1), plt.title('Sobel Filter')
+        plt.subplot(122), plt.imshow(sobel_filtered_image), plt.title('Sobel Filter')
         plt.xticks([]), plt.yticks([])
         plt.show()
 
@@ -126,7 +131,8 @@ while ans:
     5.Bo loc Sobel
     6.Exit/Quit
     """)
-    ans= input("Input your choice: ")
+    # ans= input("Input your choice: ")
+    ans = "5"
     if ans=="1":
         test.Gaussian()
     elif ans=="2":
@@ -142,4 +148,6 @@ while ans:
         ans = None
     else:
         print("\n Not Valid Choice Try again")
+
+    ans = None
 
