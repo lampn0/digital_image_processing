@@ -138,7 +138,7 @@ while ans:
     elif ans=="5":
         test.Sobel()
     elif ans=="6":
-        print("Bye")
+        print("Exit!")
         ans = None
     else:
         print("\n Not Valid Choice Try again")
