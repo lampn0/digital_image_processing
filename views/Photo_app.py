@@ -8,25 +8,100 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QDialog, QApplication, QMainWindow, QFileDialog, QLabel
 from PyQt5.QtGui import QPixmap
 from PyQt5.uic import loadUi
-from PyQt5.QtGui import QResizeEvent
 
-import cv2
+from PyQt5.QtGui import QResizeEvent
+import cv2 as cv
 import numpy as np
 from matplotlib.image import imread
-from IPython.display import Image
-import matplotlib.pyplot as plt
-from matplotlib.colors import NoNorm
 from scipy import ndimage
-from PIL import Image, ImageEnhance, ImageDraw, ImageColor, ImageFilter
+import matplotlib.pyplot as plt
+from PIL import Image
+# import time
+# import llf
 
 
-def change_brightness(img, alpha, beta):
-    img_new = np.asarray(alpha * img + beta, dtype=int)  # cast pixel values to int
-    img_new[img_new > 255] = 255
-    img_new[img_new < 0] = 0
-    return img_new
+def Sobel():
+    # Here we read the image and bring it as an array
+    filename = os.path.basename(fname[0])
+    path = os.path.dirname(fname[0])
+    name, type = os.path.splitext(filename)
+    im = Image.open(fname[0])
+    new_path = path + name + ".png"
+    im.save(new_path)
+    original_image = imread(new_path)
+    # Next we apply the Sobel filter in the x and y directions to then calculate the output image
+    dx, dy = ndimage.sobel(original_image, axis=0), ndimage.sobel(original_image, axis=1)
+    sobel_filtered_image = np.hypot(dx, dy)  # is equal to ( dx ^ 2 + dy ^ 2 ) ^ 0.5
+    sobel_filtered_image = sobel_filtered_image / np.max(sobel_filtered_image)  # normalization step
+    # Display
+    plt.subplot(121), plt.imshow(original_image), plt.title('Original')
+    plt.xticks([]), plt.yticks([])
+    plt.subplot(122), plt.imshow(sobel_filtered_image), plt.title('Sobel Filter')
+    plt.xticks([]), plt.yticks([])
+    plt.show()
 
-# from giaodienmahoa import Ui_Dialog
+def Gaussian(self):
+    # Load and blur image
+    # filename = os.path.basename(fname[0])
+    path = os.path.dirname(fname[0])
+    img = cv.imread(path)
+    blur = cv.GaussianBlur(img, (5, 5), 0)
+    # Convert color from bgr (OpenCV default) to rgb
+    img_rgb = cv.cvtColor(img, cv.COLOR_BGR2RGB)
+    blur_rgb = cv.cvtColor(blur, cv.COLOR_BGR2RGB)
+    # Display
+    plt.subplot(221), plt.imshow(img_rgb), plt.title('Gauss Noise')
+    plt.xticks([]), plt.yticks([])
+    plt.subplot(222), plt.imshow(blur_rgb), plt.title('Gauss Noise - Blurred')
+    plt.xticks([]), plt.yticks([])
+    plt.show()
+
+def Median(self):
+    # Load and blur image
+    path = os.path.dirname(fname[0])
+    img = cv.imread(path)
+    blur = cv.medianBlur(img, 5)
+    # Convert color from bgr (OpenCV default) to rgb
+    img_rgb = cv.cvtColor(img, cv.COLOR_BGR2RGB)
+    blur_rgb = cv.cvtColor(blur, cv.COLOR_BGR2RGB)
+    # Display
+    plt.subplot(221), plt.imshow(img_rgb), plt.title('Median')
+    plt.xticks([]), plt.yticks([])
+    plt.subplot(222), plt.imshow(blur_rgb), plt.title('Median - Blurred')
+    plt.xticks([]), plt.yticks([])
+    plt.show()
+
+def Normalized(self):
+    # Load and blur image
+    path = os.path.dirname(fname[0])
+    img = cv.imread(path)
+    blur = cv.blur(img, (5, 5))
+    # Convert color from bgr (OpenCV default) to rgb
+    img_rgb = cv.cvtColor(img, cv.COLOR_BGR2RGB)
+    blur_rgb = cv.cvtColor(blur, cv.COLOR_BGR2RGB)
+    # Display
+    plt.subplot(221), plt.imshow(img_rgb), plt.title('Normalized')
+    plt.xticks([]), plt.yticks([])
+    plt.subplot(222), plt.imshow(blur_rgb), plt.title('Normalized - Blurred')
+    plt.xticks([]), plt.yticks([])
+    plt.show()
+
+def Bilateral(self):
+    # Load and blur image
+    path = os.path.dirname(fname[0])
+    img = cv.imread(path)
+    blur = cv.bilateralFilter(img, 9, 75, 75)
+    # Convert color from bgr (OpenCV default) to rgb
+    img_rgb = cv.cvtColor(img, cv.COLOR_BGR2RGB)
+    blur_rgb = cv.cvtColor(blur, cv.COLOR_BGR2RGB)
+    # Display
+    plt.subplot(221), plt.imshow(img_rgb), plt.title('Bilateral')
+    plt.xticks([]), plt.yticks([])
+    plt.subplot(222), plt.imshow(blur_rgb), plt.title('Bilateral - Blurred')
+    plt.xticks([]), plt.yticks([])
+    plt.show()
+
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
@@ -41,12 +116,6 @@ class MainWindow(QMainWindow):
     def openFile(self):
         global fname
         fname = QFileDialog.getOpenFileName(self, 'Open file', '', 'Images (*.png *.jpg)')
-        global filename
-        filename= os.path.basename(fname[0])
-        global path
-        path= os.path.dirname(fname[0])
-        global name, type
-        name, type = os.path.splitext(filename)
         self.show_image()
 
     def show_image(self):
@@ -76,69 +145,6 @@ class MainWindow(QMainWindow):
     def zoom_out(self):
         print()
 
-
-class Label(QLabel):
-    def __init__(self):
-        super(Label, self).__init__()
-        self.pixmap_width: int = 1
-        self.pixmapHeight: int = 1
-
-    def setPixmapNew(self, pm: QPixmap) -> None:
-        self.pixmap_width = pm.width()
-        self.pixmapHeight = pm.height()
-
-        self.updateMargins()
-        super(Label, self).setPixmap(pm)
-
-    def resizeEvent(self, a0: QResizeEvent) -> None:
-        self.updateMargins()
-        super(Label, self).resizeEvent(a0)
-
-    def updateMargins(self):
-        if self.pixmap() is None:
-            return
-        pixmapWidth = self.pixmap().width()
-        pixmapHeight = self.pixmap().height()
-        if pixmapWidth <= 0 or pixmapHeight <= 0:
-            return
-        w, h = self.width(), self.height()
-        if w <= 0 or h <= 0:
-            return
-        if w * pixmapHeight > h * pixmapWidth:
-            m = int((w - (pixmapWidth * h / pixmapHeight)) / 2)
-            self.setContentsMargins(m, 0, m, 0)
-        else:
-            m = int((h - (pixmapHeight * w / pixmapWidth)) / 2)
-            self.setContentsMargins(0, m, 0, m)
-
-
-def cacel():
-    msg = QtWidgets.QMessageBox()
-    msg.setWindowTitle("Cancel")
-    msg.setText("Please Enter OK to Cancel!!!")
-    msg.setIcon(QtWidgets.QMessageBox.Warning)
-    msg.exec_()
-
-def Sobel():
-    # Here we read the image and bring it as an array
-    im = Image.open(fname[0])
-    new_path = path + name + ".png"
-    im.save(new_path)
-    original_image = imread(new_path)
-
-    # Next we apply the Sobel filter in the x and y directions to then calculate the output image
-    dx, dy = ndimage.sobel(original_image, axis=0), ndimage.sobel(original_image, axis=1)
-    sobel_filtered_image = np.hypot(dx, dy)  # is equal to ( dx ^ 2 + dy ^ 2 ) ^ 0.5
-    sobel_filtered_image = sobel_filtered_image / np.max(sobel_filtered_image)  # normalization step
-
-    plt.subplot(121), plt.imshow(original_image), plt.title('Original')
-    plt.imshow
-    plt.xticks([]), plt.yticks([])
-    plt.subplot(122), plt.imshow(sobel_filtered_image), plt.title('Sobel Filter')
-    plt.xticks([]), plt.yticks([])
-    plt.show()
-
-
 class EditWindow(QDialog):
     def __init__(self):
         super(EditWindow, self).__init__()
@@ -146,11 +152,6 @@ class EditWindow(QDialog):
         self.show_img()
         self.btn_back.clicked.connect(self.back)
         self.Sobel.clicked.connect(Sobel)
-        self.Invert.clicked.connect(self.Invert)
-        # self.exposure.valueChanged.connect(self.show_value)
-        self.exposure.valueChanged.connect(self.Exposure_gfc)
-        self.btn_cancel.clicked.connect(self.cancel)
-
 
     def back(self):
         back = MainWindow()
@@ -162,51 +163,85 @@ class EditWindow(QDialog):
         self.display.setPixmap(QPixmap(fname[0]).scaled(1041, 721, QtCore.Qt.KeepAspectRatio))
         self.label_name.setText(fname[0])
 
-    def cancel(self):
-        cacel()
-        self.back()
+    #
+    # def browserfiles(self):
+    #     fname = QFileDialog.getOpenFileName(self, 'Open file', '', 'Images (*.png)')
+    #     self.anhgoc.setPixmap(QPixmap(fname[0]))
+    #     self.txtLink.setText(fname[0])
+    #
+    # def khoaNgauNhien(self):
+    #     p = random_key()
+    #     self.p.setText(str(p))
+    #     e1, e2, d = key_gen(p)
+    #     self.e1.setText(str(e1))
+    #     self.e2.setText(str(e2))
+    #     self.d.setText(str(d))
+    #
+    # def tuyChinhKhoa(self):
+    #     p = self.p.toPlainText()
+    #     p = int(p)
+    #     check = check_prime_number(p)
+    #     msg = QtWidgets.QMessageBox()
+    #     msg.setWindowTitle("Kiểm tra số nguyên tố")
+    #     if check:
+    #         e1, e2, d = key_gen(p)
+    #         self.e1.setText(str(e1))
+    #         self.e2.setText(str(e2))
+    #         self.d.setText(str(d))
+    #         msg.setText("Bạn đã chọn p đúng ^-^")
+    #         msg.setIcon(QtWidgets.QMessageBox.Information)
+    #         msg.exec_()
+    #     else:
+    #         msg.setText("p không phải là số nguyên tố. Bạn hãy nhập lại !!!")
+    #         msg.setIcon(QtWidgets.QMessageBox.Information)
+    #         self.lamMoiKhoa()
+    #         msg.exec_()
+    #
+    # def lamMoiKhoa(self):
+    #     self.p.clear()
+    #     self.e1.clear()
+    #     self.e2.clear()
+    #     self.d.clear()
+    #     self.r.clear()
+    #     self.c1.clear()
+    #
+    # def encrypt_img(self):
+    #     p = int(self.p.toPlainText())
+    #     e1 = int(self.e1.toPlainText())
+    #     e2 = int(self.e2.toPlainText())
+    #     link = self.txtLink.text()
+    #     img = load_image(str(link))
+    #     print("Load ảnh thành công")
+    #     c1, r, encrypt = encryption(img, p, e1, e2)
+    #     self.r.setText(str(r))
+    #     self.c1.setText(str(c1))
+    #     self.anhmahoa.setPixmap(
+    #         QPixmap('D:/workspace/lampn182628/ly_thuyet_mat_ma/project/elgamal_image_encryption/encrypt.png'))
+    #     msg = QtWidgets.QMessageBox()
+    #     msg.setWindowTitle("Mã hóa")
+    #     msg.setText("Mã hóa thành công")
+    #     msg.setIcon(QtWidgets.QMessageBox.Information)
+    #     msg.exec_()
+    #
+    # def decrypt_img(self):
+    #     p = int(self.p.toPlainText())
+    #     d = int(self.d.toPlainText())
+    #     c1 = int(self.c1.toPlainText())
+    #     decryption(c1, p, d)
+    #     self.anhgiaima.setPixmap(
+    #         QPixmap('D:/workspace/lampn182628/ly_thuyet_mat_ma/project/elgamal_image_encryption/decrypt.png'))
+    #     msg = QtWidgets.QMessageBox()
+    #     msg.setWindowTitle("Giải mã")
+    #     msg.setText("Giải mã thành công")
+    #     msg.setIcon(QtWidgets.QMessageBox.Information)
+    #     msg.exec_()
+    #
+    # def refresh_bt(self):
+    #     self.lamMoiKhoa()
+    #     self.anhgoc.clear()
+    #     self.anhmahoa.clear()
+    #     self.anhgiaima.clear()
 
-    def show_value(self):
-        new_value = str(self.exposure.value())
-        self.display.setText(new_value)
-
-    def Invert(self):
-        img = cv2.imread(fname[0], cv2.IMREAD_UNCHANGED)
-        img1 = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
-        # Create zeros array to store the stretched image
-        new_img = np.zeros((img1.shape[0], img1.shape[1]), dtype='uint8')
-        for i in range(img1.shape[0]):
-            for j in range(img1.shape[1]):
-                new_img[i, j] = 255 - img1[i, j]
-
-        new_path = path + name + "_tmp.png"
-        f = open(new_path, 'wb')
-        (new_img)
-        self.display.setPixmap(QPixmap(new_path).scaled(1041, 721, QtCore.Qt.KeepAspectRatio))
-
-    def Exposure_gfc(self):
-        # Read the image
-        img = cv2.imread(fname[0], cv2.IMREAD_UNCHANGED)
-        img1 = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
-        k = 50
-        # Create zeros array to store the stretched image
-        new_img = np.zeros((img1.shape[0], img1.shape[1]), dtype='uint8')
-        for i in range(img1.shape[0]):
-            for j in range(img1.shape[1]):
-                v = img1[i, j] + k
-                if v > 255:
-                    new_img[i, j] = 255
-                elif v < 0:
-                    new_img[i, j] = 0
-                else:
-                    new_img[i, j] = v
-
-        new_path = path + name + "_tmp.png"
-        f = open(new_path, 'wb')
-        f.write(new_img)
-        self.display.setPixmap(QPixmap(new_path).scaled(1041, 721, QtCore.Qt.KeepAspectRatio))
 
 
 app = QApplication(sys.argv)
