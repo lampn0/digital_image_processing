@@ -16,6 +16,9 @@ from matplotlib.image import imread
 from scipy import ndimage
 import matplotlib.pyplot as plt
 from PIL import Image
+# import time
+# import llf
+
 
 def Sobel():
     # Here we read the image and bring it as an array
@@ -32,7 +35,6 @@ def Sobel():
     sobel_filtered_image = sobel_filtered_image / np.max(sobel_filtered_image)  # normalization step
     # Display
     plt.subplot(121), plt.imshow(original_image), plt.title('Original')
-    plt.imshow
     plt.xticks([]), plt.yticks([])
     plt.subplot(122), plt.imshow(sobel_filtered_image), plt.title('Sobel Filter')
     plt.xticks([]), plt.yticks([])
@@ -68,7 +70,6 @@ def Median(self):
     plt.subplot(222), plt.imshow(blur_rgb), plt.title('Median - Blurred')
     plt.xticks([]), plt.yticks([])
     plt.show()
-
 
 def Normalized(self):
     # Load and blur image

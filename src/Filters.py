@@ -128,9 +128,9 @@ class Filter:
         # im1 = cv.imread('../images/LennaBL.tif')
         # im2 = cv.imread('../images/LennaBW.tif')
         im1 = cv.imread('../images/2021-03-14_blur.jpg')
-        im2 = cv.imread('../images/2021-03-14_dark.jpg')
+        # im2 = cv.imread('../images/2021-03-14_dark.jpg')
         I1 = np.float32(cv.cvtColor(im1, cv.COLOR_BGR2GRAY) / 255)
-        I2 = np.float32(cv.cvtColor(im2, cv.COLOR_BGR2GRAY) / 255)
+        # I2 = np.float32(cv.cvtColor(im2, cv.COLOR_BGR2GRAY) / 255)
 
         sigma = 0.1
         N = 4
@@ -139,14 +139,16 @@ class Filter:
 
         # Filtering
         print(I1.shape)
-        print(I2.shape)
-        im_e = llf.xllf(I1, I2, sigma, fact, N)
+        # print(I2.shape)
+        # im_e = llf.xllf(I1, I2, sigma, fact, N)
+        im_e = llf.xllf(I1, sigma, fact, N)
         im_ergb = llf.repeat(im_e)
         elapsed = time.time() - t
         print(elapsed)
 
         # plot the image
-        im_con = np.concatenate((im1 / 255, im2 / 255, im_ergb), axis=1)
+        # im_con = np.concatenate((im1 / 255, im2 / 255, im_ergb), axis=1)
+        im_con = np.concatenate((im1 / 255, im_ergb), axis=1)
         imgplt = plt.imshow(im_con)
         plt.show()
 
