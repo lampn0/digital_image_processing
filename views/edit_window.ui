@@ -34,7 +34,7 @@
     <enum>QTabWidget::Triangular</enum>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>2</number>
    </property>
    <property name="elideMode">
     <enum>Qt::ElideNone</enum>
@@ -549,9 +549,9 @@
          </widget>
         </item>
         <item row="0" column="4">
-         <widget class="QPushButton" name="pushButton_8">
+         <widget class="QPushButton" name="Invert">
           <property name="text">
-           <string>Neo</string>
+           <string>Invert</string>
           </property>
           <property name="flat">
            <bool>false</bool>
@@ -884,10 +884,10 @@
           <item>
            <widget class="QSlider" name="exposure">
             <property name="minimum">
-             <number>-45</number>
+             <number>-100</number>
             </property>
             <property name="maximum">
-             <number>45</number>
+             <number>100</number>
             </property>
             <property name="tracking">
              <bool>true</bool>
