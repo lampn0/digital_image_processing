@@ -24,7 +24,7 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>13</pointsize>
+     <pointsize>12</pointsize>
     </font>
    </property>
    <property name="tabPosition">
@@ -34,7 +34,7 @@
     <enum>QTabWidget::Triangular</enum>
    </property>
    <property name="currentIndex">
-    <number>2</number>
+    <number>1</number>
    </property>
    <property name="elideMode">
     <enum>Qt::ElideNone</enum>
@@ -328,7 +328,7 @@
          </spacer>
         </item>
         <item>
-         <widget class="QSlider" name="horizontalSlider_2">
+         <widget class="QSlider" name="enhance">
           <property name="minimum">
            <number>-45</number>
           </property>
@@ -415,7 +415,7 @@
          </spacer>
         </item>
         <item>
-         <widget class="QSlider" name="horizontalSlider_3">
+         <widget class="QSlider" name="filter_intensity">
           <property name="minimum">
            <number>-45</number>
           </property>
@@ -539,9 +539,9 @@
          </spacer>
         </item>
         <item row="0" column="2">
-         <widget class="QPushButton" name="pushButton_7">
+         <widget class="QPushButton" name="Sobel">
           <property name="text">
-           <string>Sauna</string>
+           <string>Sobel</string>
           </property>
           <property name="flat">
            <bool>false</bool>
@@ -617,7 +617,7 @@
          </widget>
         </item>
         <item row="0" column="0">
-         <widget class="QPushButton" name="pushButton_6">
+         <widget class="QPushButton" name="original">
           <property name="font">
            <font>
             <pointsize>12</pointsize>
@@ -761,15 +761,15 @@
       </rect>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="p_light">
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>100</width>
-        <height>30</height>
+        <width>281</width>
+        <height>305</height>
        </rect>
       </property>
       <attribute name="label">
@@ -811,7 +811,7 @@
            </spacer>
           </item>
           <item>
-           <widget class="QSlider" name="horizontalSlider_5">
+           <widget class="QSlider" name="contrast">
             <property name="minimum">
              <number>-45</number>
             </property>
@@ -882,7 +882,7 @@
            </spacer>
           </item>
           <item>
-           <widget class="QSlider" name="horizontalSlider_6">
+           <widget class="QSlider" name="exposure">
             <property name="minimum">
              <number>-45</number>
             </property>
@@ -928,7 +928,7 @@
          </layout>
         </item>
         <item>
-         <widget class="QLabel" name="label_9">
+         <widget class="QLabel" name="highlights">
           <property name="text">
            <string>Highlights</string>
           </property>
@@ -999,7 +999,7 @@
          </layout>
         </item>
         <item>
-         <widget class="QLabel" name="label_10">
+         <widget class="QLabel" name="shadows">
           <property name="text">
            <string>Shadows</string>
           </property>
@@ -1078,7 +1078,7 @@
         <x>0</x>
         <y>0</y>
         <width>281</width>
-        <height>301</height>
+        <height>305</height>
        </rect>
       </property>
       <attribute name="label">
@@ -1095,7 +1095,7 @@
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_5">
         <item>
-         <widget class="QLabel" name="label_11">
+         <widget class="QLabel" name="label_tint">
           <property name="text">
            <string>Tint</string>
           </property>
@@ -1120,7 +1120,7 @@
            </spacer>
           </item>
           <item>
-           <widget class="QSlider" name="horizontalSlider_13">
+           <widget class="QSlider" name="tint">
             <property name="autoFillBackground">
              <bool>true</bool>
             </property>
@@ -1185,7 +1185,7 @@
          </spacer>
         </item>
         <item>
-         <widget class="QLabel" name="label_12">
+         <widget class="QLabel" name="label_warmth">
           <property name="text">
            <string>Warmth</string>
           </property>
@@ -1210,7 +1210,7 @@
            </spacer>
           </item>
           <item>
-           <widget class="QSlider" name="horizontalSlider_14">
+           <widget class="QSlider" name="warmth">
             <property name="autoFillBackground">
              <bool>false</bool>
             </property>
@@ -1286,7 +1286,7 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_6">
       <item>
-       <widget class="QLabel" name="label_13">
+       <widget class="QLabel" name="label_clarity">
         <property name="text">
          <string>Clarity</string>
         </property>
@@ -1311,7 +1311,7 @@
          </spacer>
         </item>
         <item>
-         <widget class="QSlider" name="horizontalSlider_15">
+         <widget class="QSlider" name="clarity">
           <property name="minimum">
            <number>-45</number>
           </property>
@@ -1357,7 +1357,7 @@
        </layout>
       </item>
       <item>
-       <widget class="QLabel" name="label_14">
+       <widget class="QLabel" name="label_9">
         <property name="text">
          <string>Vignette</string>
         </property>
@@ -1382,7 +1382,7 @@
          </spacer>
         </item>
         <item>
-         <widget class="QSlider" name="horizontalSlider_16">
+         <widget class="QSlider" name="vignette">
           <property name="minimum">
            <number>-45</number>
           </property>
@@ -1444,25 +1444,6 @@
     </widget>
    </widget>
   </widget>
-  <widget class="QLabel" name="label_display">
-   <property name="geometry">
-    <rect>
-     <x>40</x>
-     <y>40</y>
-     <width>1011</width>
-     <height>721</height>
-    </rect>
-   </property>
-   <property name="frameShape">
-    <enum>QFrame::Box</enum>
-   </property>
-   <property name="text">
-    <string>DISPLAY</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_name">
    <property name="geometry">
     <rect>
@@ -1473,7 +1454,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>NAME</string>
+    <string/>
    </property>
   </widget>
   <widget class="QWidget" name="horizontalLayoutWidget">
@@ -1535,6 +1516,40 @@
    </property>
    <property name="text">
     <string>Back</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="display">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>40</y>
+     <width>1041</width>
+     <height>721</height>
+    </rect>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>16777215</width>
+     <height>16777215</height>
+    </size>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="autoFillBackground">
+    <bool>true</bool>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::Box</enum>
+   </property>
+   <property name="lineWidth">
+    <number>2</number>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
  </widget>

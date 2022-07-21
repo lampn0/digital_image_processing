@@ -1,18 +1,44 @@
-import sys
+import sys, os
+
+# insert at 1, 0 is the script path (or '' in REPL)
+sys.path.insert(1, '../src')
+# import Sobel
+
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QDialog, QApplication, QMainWindow, QFileDialog, QLabel
 from PyQt5.QtGui import QPixmap
 from PyQt5.uic import loadUi
 
 from PyQt5.QtGui import QResizeEvent
-
-import pickle, argparse, re, sys
-import array
-import random
 import cv2 as cv
-import numpy
+import numpy as np
+from matplotlib.image import imread
+from scipy import ndimage
+import matplotlib.pyplot as plt
+from PIL import Image
 
 
+def Sobel():
+    # Here we read the image and bring it as an array
+    filename = os.path.basename(fname[0])
+    path = os.path.dirname(fname[0])
+    name, type = os.path.splitext(filename)
+    im = Image.open(fname[0])
+    new_path = path + name + ".png"
+    im.save(new_path)
+    original_image = imread(new_path)
+
+    # Next we apply the Sobel filter in the x and y directions to then calculate the output image
+    dx, dy = ndimage.sobel(original_image, axis=0), ndimage.sobel(original_image, axis=1)
+    sobel_filtered_image = np.hypot(dx, dy)  # is equal to ( dx ^ 2 + dy ^ 2 ) ^ 0.5
+    sobel_filtered_image = sobel_filtered_image / np.max(sobel_filtered_image)  # normalization step
+
+    plt.subplot(121), plt.imshow(original_image), plt.title('Original')
+    plt.imshow
+    plt.xticks([]), plt.yticks([])
+    plt.subplot(122), plt.imshow(sobel_filtered_image), plt.title('Sobel Filter')
+    plt.xticks([]), plt.yticks([])
+    plt.show()
 
 # from giaodienmahoa import Ui_Dialog
 class MainWindow(QMainWindow):
@@ -20,21 +46,44 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__()
         loadUi("main_window.ui", self)
         self.actionOpen.triggered.connect(self.openFile)
+        self.actionExit.triggered.connect(self.exit)
         self.btn_edit.clicked.connect(self.editImage)
+        self.btn_rotate.clicked.connect(self.rotate)
+        # self.btn_zin.clicked.connect(self.zoom_in)
+        # self.btn_zout.clicked.connect(self.btn_zout)
 
     def openFile(self):
+        global fname
         fname = QFileDialog.getOpenFileName(self, 'Open file', '', 'Images (*.png *.jpg)')
-        self.display.setPixmap(QPixmap(fname[0]))
-        self.label_name.setText(fname[0])
+        self.show_image()
 
-        # self.label_name.setText(fname[0])
-        # self.display = Label()
-        # self.display.setPixmapNew(QPixmap(fname[0]))
+    def show_image(self):
+        self.display.setPixmap(QPixmap(fname[0]).scaled(1341, 601, QtCore.Qt.KeepAspectRatio))
+        self.label_name.setText(fname[0])
+        self.btn_edit.setEnabled(True)
+        self.btn_del.setEnabled(True)
+        self.btn_zin.setEnabled(True)
+        self.btn_full.setEnabled(True)
+        self.btn_zout.setEnabled(True)
+        self.btn_rotate.setEnabled(True)
 
     def editImage(self):
         editimage = EditWindow()
         widget.addWidget(editimage)
-        widget.setCurrentIndex(widget.currentIndex()+1)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+
+    def exit(self):
+        widget.close()
+
+    def rotate(self):
+        Image.Image.rotate(90)
+
+    def zoom_in(self):
+        print()
+
+    def zoom_out(self):
+        print()
+
 
 class Label(QLabel):
     def __init__(self):
@@ -55,7 +104,7 @@ class Label(QLabel):
 
     def updateMargins(self):
         if self.pixmap() is None:
-                return
+            return
         pixmapWidth = self.pixmap().width()
         pixmapHeight = self.pixmap().height()
         if pixmapWidth <= 0 or pixmapHeight <= 0:
@@ -70,7 +119,6 @@ class Label(QLabel):
             m = int((h - (pixmapHeight * w / pixmapWidth)) / 2)
             self.setContentsMargins(0, m, 0, m)
 
-
     #     self.browser.clicked.connect(self.browserfiles)
     #     self.khoangaunhien.clicked.connect(self.khoaNgauNhien)
     #     self.tuychinhkhoa.clicked.connect(self.tuyChinhKhoa)
@@ -84,12 +132,19 @@ class EditWindow(QDialog):
     def __init__(self):
         super(EditWindow, self).__init__()
         loadUi("edit_window.ui", self)
+        self.show_img()
         self.btn_back.clicked.connect(self.back)
+        self.Sobel.clicked.connect(Sobel)
 
     def back(self):
         back = MainWindow()
         widget.addWidget(back)
         widget.setCurrentIndex(widget.currentIndex() + 1)
+        back.show_image()
+
+    def show_img(self):
+        self.display.setPixmap(QPixmap(fname[0]).scaled(1041, 721, QtCore.Qt.KeepAspectRatio))
+        self.label_name.setText(fname[0])
 
     #
     # def browserfiles(self):
@@ -169,6 +224,7 @@ class EditWindow(QDialog):
     #     self.anhgoc.clear()
     #     self.anhmahoa.clear()
     #     self.anhgiaima.clear()
+
 
 
 app = QApplication(sys.argv)

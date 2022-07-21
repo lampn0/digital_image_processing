@@ -118,7 +118,6 @@ class Ui_MainWindow(object):
         self.actionOpen.setText(_translate("MainWindow", "Open"))
         self.actionExit.setText(_translate("MainWindow", "Exit"))
 
-        self.btn_edit.clicked
 
 if __name__ == "__main__":
     import sys
