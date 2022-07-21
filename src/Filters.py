@@ -105,7 +105,6 @@ class Filter:
 
     def Sobel(self):
         # Here we read the image and bring it as an array
-
         im = Image.open('../images/shape.jpg')
         im.save('../images/shape.png')
         original_image = imread("../images/shape.png")
@@ -149,7 +148,6 @@ class Filter:
         # plot the image
         im_con = np.concatenate((im1 / 255, im2 / 255, im_ergb), axis=1)
         imgplt = plt.imshow(im_con)
-
         plt.show()
 
 ans=True

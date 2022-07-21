@@ -17,7 +17,6 @@ from scipy import ndimage
 import matplotlib.pyplot as plt
 from PIL import Image
 
-
 def Sobel():
     # Here we read the image and bring it as an array
     filename = os.path.basename(fname[0])
@@ -27,12 +26,11 @@ def Sobel():
     new_path = path + name + ".png"
     im.save(new_path)
     original_image = imread(new_path)
-
     # Next we apply the Sobel filter in the x and y directions to then calculate the output image
     dx, dy = ndimage.sobel(original_image, axis=0), ndimage.sobel(original_image, axis=1)
     sobel_filtered_image = np.hypot(dx, dy)  # is equal to ( dx ^ 2 + dy ^ 2 ) ^ 0.5
     sobel_filtered_image = sobel_filtered_image / np.max(sobel_filtered_image)  # normalization step
-
+    # Display
     plt.subplot(121), plt.imshow(original_image), plt.title('Original')
     plt.imshow
     plt.xticks([]), plt.yticks([])
@@ -40,7 +38,69 @@ def Sobel():
     plt.xticks([]), plt.yticks([])
     plt.show()
 
-# from giaodienmahoa import Ui_Dialog
+def Gaussian(self):
+    # Load and blur image
+    # filename = os.path.basename(fname[0])
+    path = os.path.dirname(fname[0])
+    img = cv.imread(path)
+    blur = cv.GaussianBlur(img, (5, 5), 0)
+    # Convert color from bgr (OpenCV default) to rgb
+    img_rgb = cv.cvtColor(img, cv.COLOR_BGR2RGB)
+    blur_rgb = cv.cvtColor(blur, cv.COLOR_BGR2RGB)
+    # Display
+    plt.subplot(221), plt.imshow(img_rgb), plt.title('Gauss Noise')
+    plt.xticks([]), plt.yticks([])
+    plt.subplot(222), plt.imshow(blur_rgb), plt.title('Gauss Noise - Blurred')
+    plt.xticks([]), plt.yticks([])
+    plt.show()
+
+def Median(self):
+    # Load and blur image
+    path = os.path.dirname(fname[0])
+    img = cv.imread(path)
+    blur = cv.medianBlur(img, 5)
+    # Convert color from bgr (OpenCV default) to rgb
+    img_rgb = cv.cvtColor(img, cv.COLOR_BGR2RGB)
+    blur_rgb = cv.cvtColor(blur, cv.COLOR_BGR2RGB)
+    # Display
+    plt.subplot(221), plt.imshow(img_rgb), plt.title('Median')
+    plt.xticks([]), plt.yticks([])
+    plt.subplot(222), plt.imshow(blur_rgb), plt.title('Median - Blurred')
+    plt.xticks([]), plt.yticks([])
+    plt.show()
+
+
+def Normalized(self):
+    # Load and blur image
+    path = os.path.dirname(fname[0])
+    img = cv.imread(path)
+    blur = cv.blur(img, (5, 5))
+    # Convert color from bgr (OpenCV default) to rgb
+    img_rgb = cv.cvtColor(img, cv.COLOR_BGR2RGB)
+    blur_rgb = cv.cvtColor(blur, cv.COLOR_BGR2RGB)
+    # Display
+    plt.subplot(221), plt.imshow(img_rgb), plt.title('Normalized')
+    plt.xticks([]), plt.yticks([])
+    plt.subplot(222), plt.imshow(blur_rgb), plt.title('Normalized - Blurred')
+    plt.xticks([]), plt.yticks([])
+    plt.show()
+
+def Bilateral(self):
+    # Load and blur image
+    path = os.path.dirname(fname[0])
+    img = cv.imread(path)
+    blur = cv.bilateralFilter(img, 9, 75, 75)
+    # Convert color from bgr (OpenCV default) to rgb
+    img_rgb = cv.cvtColor(img, cv.COLOR_BGR2RGB)
+    blur_rgb = cv.cvtColor(blur, cv.COLOR_BGR2RGB)
+    # Display
+    plt.subplot(221), plt.imshow(img_rgb), plt.title('Bilateral')
+    plt.xticks([]), plt.yticks([])
+    plt.subplot(222), plt.imshow(blur_rgb), plt.title('Bilateral - Blurred')
+    plt.xticks([]), plt.yticks([])
+    plt.show()
+
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
@@ -83,50 +143,6 @@ class MainWindow(QMainWindow):
 
     def zoom_out(self):
         print()
-
-
-class Label(QLabel):
-    def __init__(self):
-        super(Label, self).__init__()
-        self.pixmap_width: int = 1
-        self.pixmapHeight: int = 1
-
-    def setPixmapNew(self, pm: QPixmap) -> None:
-        self.pixmap_width = pm.width()
-        self.pixmapHeight = pm.height()
-
-        self.updateMargins()
-        super(Label, self).setPixmap(pm)
-
-    def resizeEvent(self, a0: QResizeEvent) -> None:
-        self.updateMargins()
-        super(Label, self).resizeEvent(a0)
-
-    def updateMargins(self):
-        if self.pixmap() is None:
-            return
-        pixmapWidth = self.pixmap().width()
-        pixmapHeight = self.pixmap().height()
-        if pixmapWidth <= 0 or pixmapHeight <= 0:
-            return
-        w, h = self.width(), self.height()
-        if w <= 0 or h <= 0:
-            return
-        if w * pixmapHeight > h * pixmapWidth:
-            m = int((w - (pixmapWidth * h / pixmapHeight)) / 2)
-            self.setContentsMargins(m, 0, m, 0)
-        else:
-            m = int((h - (pixmapHeight * w / pixmapWidth)) / 2)
-            self.setContentsMargins(0, m, 0, m)
-
-    #     self.browser.clicked.connect(self.browserfiles)
-    #     self.khoangaunhien.clicked.connect(self.khoaNgauNhien)
-    #     self.tuychinhkhoa.clicked.connect(self.tuyChinhKhoa)
-    #     self.lammoikhoa.clicked.connect(self.lamMoiKhoa)
-    #     self.mahoa.clicked.connect(self.encrypt_img)
-    #     self.giaima.clicked.connect(self.decrypt_img)
-    #     self.refresh.clicked.connect(self.refresh_bt)
-
 
 class EditWindow(QDialog):
     def __init__(self):

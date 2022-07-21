@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1366</width>
+    <width>1397</width>
     <height>768</height>
    </rect>
   </property>
@@ -297,7 +297,7 @@
       <rect>
        <x>11</x>
        <y>10</y>
-       <width>281</width>
+       <width>333</width>
        <height>661</height>
       </rect>
      </property>
@@ -485,125 +485,8 @@
       </item>
       <item>
        <layout class="QGridLayout" name="gridLayout">
-        <item row="2" column="4">
-         <widget class="QPushButton" name="pushButton_11">
-          <property name="text">
-           <string>Sunscreen</string>
-          </property>
-          <property name="flat">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="2">
-         <widget class="QPushButton" name="pushButton_12">
-          <property name="text">
-           <string>Sahara</string>
-          </property>
-          <property name="flat">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="2">
-         <widget class="QPushButton" name="pushButton_9">
-          <property name="text">
-           <string>Rouge</string>
-          </property>
-          <property name="flat">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="4">
-         <widget class="QPushButton" name="pushButton_14">
-          <property name="text">
-           <string>Zeke</string>
-          </property>
-          <property name="flat">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="12" column="2">
-         <spacer name="verticalSpacer_6">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="0" column="2">
-         <widget class="QPushButton" name="Sobel">
-          <property name="text">
-           <string>Sobel</string>
-          </property>
-          <property name="flat">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="4">
-         <widget class="QPushButton" name="pushButton_8">
-          <property name="text">
-           <string>Neo</string>
-          </property>
-          <property name="flat">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="7" column="4">
-         <widget class="QPushButton" name="pushButton_17">
-          <property name="text">
-           <string>Denim</string>
-          </property>
-          <property name="flat">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="7" column="2">
-         <widget class="QPushButton" name="pushButton_16">
-          <property name="text">
-           <string>Burlesque</string>
-          </property>
-          <property name="flat">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QPushButton" name="pushButton_10">
-          <property name="text">
-           <string>Slate</string>
-          </property>
-          <property name="flat">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="Line" name="line">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="3">
-         <widget class="Line" name="line_2">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="2">
-         <widget class="Line" name="line_3">
+        <item row="3" column="4">
+         <widget class="Line" name="line_8">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -631,13 +514,10 @@
           </property>
          </widget>
         </item>
-        <item row="4" column="0">
-         <widget class="QPushButton" name="pushButton_13">
-          <property name="text">
-           <string>Icarus</string>
-          </property>
-          <property name="flat">
-           <bool>false</bool>
+        <item row="1" column="2">
+         <widget class="Line" name="line_3">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
           </property>
          </widget>
         </item>
@@ -665,6 +545,16 @@
           </property>
          </widget>
         </item>
+        <item row="4" column="0">
+         <widget class="QPushButton" name="pushButton_13">
+          <property name="text">
+           <string>Icarus</string>
+          </property>
+          <property name="flat">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
         <item row="1" column="4">
          <widget class="Line" name="line_7">
           <property name="orientation">
@@ -672,17 +562,131 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="4">
-         <widget class="Line" name="line_8">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
+        <item row="4" column="2">
+         <widget class="QPushButton" name="pushButton_12">
+          <property name="text">
+           <string>Sahara</string>
+          </property>
+          <property name="flat">
+           <bool>false</bool>
           </property>
          </widget>
         </item>
-        <item row="6" column="4">
-         <widget class="Line" name="line_10">
+        <item row="12" column="2">
+         <spacer name="verticalSpacer_6">
           <property name="orientation">
-           <enum>Qt::Horizontal</enum>
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="4" column="4">
+         <widget class="QPushButton" name="pushButton_14">
+          <property name="text">
+           <string>Zeke</string>
+          </property>
+          <property name="flat">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="2">
+         <widget class="QPushButton" name="pushButton_9">
+          <property name="text">
+           <string>Nomalized</string>
+          </property>
+          <property name="flat">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QPushButton" name="Sobel">
+          <property name="text">
+           <string>Sobel</string>
+          </property>
+          <property name="flat">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="2">
+         <widget class="QPushButton" name="pushButton_16">
+          <property name="text">
+           <string>Burlesque</string>
+          </property>
+          <property name="flat">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QPushButton" name="pushButton_10">
+          <property name="text">
+           <string>Median</string>
+          </property>
+          <property name="flat">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="4">
+         <widget class="QPushButton" name="pushButton_17">
+          <property name="text">
+           <string>Denim</string>
+          </property>
+          <property name="flat">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="Line" name="line">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="3">
+         <widget class="Line" name="line_2">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="4">
+         <widget class="QPushButton" name="pushButton_11">
+          <property name="text">
+           <string>Bilateral</string>
+          </property>
+          <property name="flat">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="Line" name="line_14">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="Line" name="line_13">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="3">
+         <widget class="Line" name="line_15">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
           </property>
          </widget>
         </item>
@@ -700,34 +704,6 @@
           </property>
          </widget>
         </item>
-        <item row="7" column="1">
-         <widget class="Line" name="line_12">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="1">
-         <widget class="Line" name="line_13">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="Line" name="line_14">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="3">
-         <widget class="Line" name="line_15">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-         </widget>
-        </item>
         <item row="2" column="3">
          <widget class="Line" name="line_16">
           <property name="orientation">
@@ -735,10 +711,34 @@
           </property>
          </widget>
         </item>
+        <item row="7" column="1">
+         <widget class="Line" name="line_12">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="4">
+         <widget class="Line" name="line_10">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
         <item row="7" column="3">
          <widget class="Line" name="line_17">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="4">
+         <widget class="QPushButton" name="pushButton_8">
+          <property name="text">
+           <string>Gaussian</string>
+          </property>
+          <property name="flat">
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -769,7 +769,7 @@
         <x>0</x>
         <y>0</y>
         <width>281</width>
-        <height>305</height>
+        <height>293</height>
        </rect>
       </property>
       <attribute name="label">
@@ -1077,8 +1077,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>281</width>
-        <height>305</height>
+        <width>100</width>
+        <height>30</height>
        </rect>
       </property>
       <attribute name="label">
@@ -1462,7 +1462,7 @@
     <rect>
      <x>1069</x>
      <y>720</y>
-     <width>291</width>
+     <width>318</width>
      <height>41</height>
     </rect>
    </property>
