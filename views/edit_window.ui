@@ -34,7 +34,7 @@
     <enum>QTabWidget::Triangular</enum>
    </property>
    <property name="currentIndex">
-    <number>2</number>
+    <number>1</number>
    </property>
    <property name="elideMode">
     <enum>Qt::ElideNone</enum>
@@ -617,7 +617,7 @@
          </widget>
         </item>
         <item row="0" column="0">
-         <widget class="QPushButton" name="original">
+         <widget class="QPushButton" name="Original">
           <property name="font">
            <font>
             <pointsize>12</pointsize>
