@@ -198,16 +198,57 @@ def cacel():
     msg.setIcon(QtWidgets.QMessageBox.Warning)
     msg.exec_()
 
+def controller(img, brightness=255, contrast=127):
+    brightness = int((brightness - 0) * (255 - (-255)) / (510 - 0) + (-255))
+    contrast = int((contrast - 0) * (127 - (-127)) / (254 - 0) + (-127))
+
+    if brightness != 0:
+        if brightness > 0:
+            shadow = brightness
+            max = 255
+        else:
+            shadow = 0
+            max = 255 + brightness
+
+        al_pha = (max - shadow) / 255
+        ga_mma = shadow
+
+        # The function addWeighted calculates
+        # the weighted sum of two arrays
+        cal = cv2.addWeighted(img, al_pha, img, 0, ga_mma)
+
+    else:
+        cal = img
+
+    if contrast != 0:
+        Alpha = float(131 * (contrast + 127)) / (127 * (131 - contrast))
+        Gamma = 127 * (1 - Alpha)
+
+        # The function addWeighted calculates
+        # the weighted sum of two arrays
+        cal = cv2.addWeighted(cal, Alpha, cal, 0, Gamma)
+
+    return cal
+
 class EditWindow(QDialog):
     def __init__(self):
         super(EditWindow, self).__init__()
         loadUi("edit_window.ui", self)
-        self.show_img()
+        self.show_img(fname[0])
+        global img_edit
+        img_edit = cv2.imread(fname[0])
         self.btn_back.clicked.connect(self.back)
         self.Original.clicked.connect(self.original)
         self.Sobel.clicked.connect(self.sobel)
         self.Invert.clicked.connect(self.invert)
-        self.exposure.valueChanged.connect(self.exposure_gfc)
+        self.contrast.valueChanged.connect(self.Contrast)
+        self.exposure.valueChanged.connect(self.Exposure)
+        self.highlights.valueChanged.connect(self.Highlights)
+        self.shadows.valueChanged.connect(self.Shadows)
+        self.tint.valueChanged.connect(self.Tint)
+        self.warmth.valueChanged.connect(self.Warmth)
+        self.clarity.valueChanged.connect(self.Clarity)
+        self.vignette.valueChanged.connect(self.Vignette)
         self.btn_cancel.clicked.connect(self.cancel)
 
     def back(self):
@@ -216,20 +257,16 @@ class EditWindow(QDialog):
         widget.setCurrentIndex(widget.currentIndex() + 1)
         back.show_image()
 
-    def show_img(self):
-        self.display.setPixmap(QPixmap(fname[0]).scaled(1041, 721, QtCore.Qt.KeepAspectRatio))
+    def show_img(self, img_path):
+        self.display.setPixmap(QPixmap(img_path).scaled(1041, 721, QtCore.Qt.KeepAspectRatio))
         self.label_name.setText(fname[0])
 
     def cancel(self):
         cacel()
         self.back()
 
-    def show_value(self):
-        new_value = str(self.exposure.value())
-        self.display.setText(new_value)
-
     def original(self):
-        self.show_img()
+        self.show_img(fname[0])
 
     def invert(self):
         im = Image.open(fname[0])
@@ -238,23 +275,14 @@ class EditWindow(QDialog):
         img = cv2.imread(new_path, cv2.IMREAD_UNCHANGED)
         img1 = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-        # plt.figure(figsize=(10, 10))
-        # plt.subplot(121)
-        # plt.imshow(img1, cmap='gray', norm=NoNorm())
-        # plt.subplot(222)
-        # plt.hist(img1.ravel(), 256, [0, 256])
-
         # Create zeros array to store the stretched image
         new_img = np.zeros((img1.shape[0], img1.shape[1]), dtype='uint8')
         for i in range(img1.shape[0]):
             for j in range(img1.shape[1]):
                 new_img[i, j] = 255 - img1[i, j]
-        # plt.subplot(122)
+
         plt.imshow(new_img, cmap='gray', norm=NoNorm())
         plt.xticks([]), plt.yticks([])
-        # plt.subplot(224)
-        # plt.hist(new_img.ravel(), 256, [0, 256])
-        # plt.show()
 
         new_path = path + "/" + name + "_tmp.png"
         plt.savefig(new_path)
@@ -326,6 +354,48 @@ class EditWindow(QDialog):
         new_path = path + "/" + name + "_tmp.png"
         plt.savefig(new_path)
         self.display.setPixmap(QPixmap(new_path).scaled(1041, 721, QtCore.Qt.KeepAspectRatio))
+
+    def Contrast(self):
+        value = str(self.contrast.value())
+        self.Contrast_value.setText(value)
+        effect = controller(img_edit, self.exposure.value() + 255, self.contrast.value() + 127)
+        cv2.imshow('Effect', effect)
+        # plt.imshow(effect, norm=NoNorm())
+        # plt.xticks([]), plt.yticks([])
+        #
+        # new_path = path + "/" + name + "_tmp.png"
+        # plt.savefig(new_path)
+        # self.display.setPixmap(QPixmap(new_path).scaled(1041, 721, QtCore.Qt.KeepAspectRatio))
+
+    def Exposure(self):
+        value = str(self.exposure.value())
+        self.Exposure_value.setText(value)
+        effect = controller(img_edit, self.exposure.value() + 255, self.contrast.value() + 127)
+        cv2.imshow('Effect', effect)
+
+    def Highlights(self):
+        value = str(self.highlights.value())
+        self.Highlights_value.setText(value)
+
+    def Shadows(self):
+        value = str(self.shadows.value())
+        self.Shadows_value.setText(value)
+
+    def Tint(self):
+        value = str(self.tint.value())
+        self.Tint_value.setText(value)
+
+    def Warmth(self):
+        value = str(self.warmth.value())
+        self.Warmth_value.setText(value)
+
+    def Clarity(self):
+        value = str(self.clarity.value())
+        self.Clarity_value.setText(value)
+
+    def Vignette(self):
+        value = str(self.vignette.value())
+        self.Vignette_value.setText(value)
 
 
 app = QApplication(sys.argv)

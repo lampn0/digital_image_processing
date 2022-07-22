@@ -5,13 +5,12 @@ def BrightnessContrast(brightness=0):
     # getTrackbarPos returns the current
     # position of the specified trackbar.
     brightness = cv2.getTrackbarPos('Brightness', 'GEEK')
-    #
     contrast = cv2.getTrackbarPos('Contrast', 'GEEK')
-    #
+
     effect = controller(img, brightness, contrast)
-    #
-    # # The function imshow displays an image
-    # # in the specified window
+
+    # The function imshow displays an image
+    # in the specified window
     cv2.imshow('Effect', effect)
 
 
@@ -26,13 +25,14 @@ def controller(img, brightness=255, contrast=127):
         else:
             shadow = 0
             max = 255 + brightness
+
         al_pha = (max - shadow) / 255
         ga_mma = shadow
 
         # The function addWeighted calculates
         # the weighted sum of two arrays
-        cal = cv2.addWeighted(img, al_pha,
-                              img, 0, ga_mma)
+        cal = cv2.addWeighted(img, al_pha, img, 0, ga_mma)
+
     else:
         cal = img
 
@@ -42,12 +42,10 @@ def controller(img, brightness=255, contrast=127):
 
         # The function addWeighted calculates
         # the weighted sum of two arrays
-        cal = cv2.addWeighted(cal, Alpha,
-                              cal, 0, Gamma)
+        cal = cv2.addWeighted(cal, Alpha, cal, 0, Gamma)
 
     # putText renders the specified text string in the image.
-    cv2.putText(cal, 'B:{},C:{}'.format(brightness,
-                                        contrast), (10, 30),
+    cv2.putText(cal, 'B:{},C:{}'.format(brightness, contrast), (10, 30),
                 cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
     return cal
@@ -56,7 +54,7 @@ def controller(img, brightness=255, contrast=127):
 if __name__ == '__main__':
     # The function imread loads an image
     # from the specified file and returns it.
-    original = cv2.imread("D:/workspace/lampn182628/xu_ly_anh/project/digital_image_processing/digital_image_processing/views/2021-03-14_orig.png")
+    original = cv2.imread("2021-03-14_orig.png")
 
     # Making another copy of an image.
     img = original.copy()
@@ -73,18 +71,14 @@ if __name__ == '__main__':
     # createTrackbar(trackbarName,
     # windowName, value, count, onChange)
     # Brightness range -255 to 255
-    cv2.createTrackbar('Brightness',
-                       'GEEK', 255, 2 * 255,
-                       BrightnessContrast)
+    cv2.createTrackbar('Brightness', 'GEEK', 255, 2 * 255, BrightnessContrast)
 
     # Contrast range -127 to 127
-    cv2.createTrackbar('Contrast', 'GEEK',
-                       127, 2 * 127,
-                       BrightnessContrast)
+    cv2.createTrackbar('Contrast', 'GEEK', 127, 2 * 127, BrightnessContrast)
 
     BrightnessContrast(0)
 
 # The function waitKey waits for
-# a key event infinitely  or for delay
+# a key event infinitely or for delay
 # milliseconds, when it is positive.
 cv2.waitKey(0)

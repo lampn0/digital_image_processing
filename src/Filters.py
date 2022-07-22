@@ -121,6 +121,8 @@ class Filter:
         plt.xticks([]), plt.yticks([])
         plt.show()
 
+
+
     def LaplacianFilter(self):
         np.set_printoptions(precision=5)
         np.set_printoptions(suppress=True)

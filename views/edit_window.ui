@@ -815,7 +815,7 @@
       </rect>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="p_light">
       <property name="geometry">
@@ -891,10 +891,10 @@
           <item>
            <widget class="QSlider" name="contrast">
             <property name="minimum">
-             <number>-45</number>
+             <number>-127</number>
             </property>
             <property name="maximum">
-             <number>45</number>
+             <number>127</number>
             </property>
             <property name="tracking">
              <bool>true</bool>
@@ -986,10 +986,10 @@
           <item>
            <widget class="QSlider" name="exposure">
             <property name="minimum">
-             <number>-100</number>
+             <number>-255</number>
             </property>
             <property name="maximum">
-             <number>100</number>
+             <number>255</number>
             </property>
             <property name="tracking">
              <bool>true</bool>
@@ -1032,7 +1032,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_12">
           <item>
-           <widget class="QLabel" name="highlights">
+           <widget class="QLabel" name="highlights_label">
             <property name="text">
              <string>Highlights</string>
             </property>
@@ -1079,12 +1079,12 @@
            </spacer>
           </item>
           <item>
-           <widget class="QSlider" name="horizontalSlider_8">
+           <widget class="QSlider" name="highlights">
             <property name="minimum">
-             <number>-45</number>
+             <number>-100</number>
             </property>
             <property name="maximum">
-             <number>45</number>
+             <number>100</number>
             </property>
             <property name="tracking">
              <bool>true</bool>
@@ -1127,7 +1127,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_19">
           <item>
-           <widget class="QLabel" name="shadows">
+           <widget class="QLabel" name="shadows_label">
             <property name="text">
              <string>Shadows</string>
             </property>
@@ -1174,12 +1174,12 @@
            </spacer>
           </item>
           <item>
-           <widget class="QSlider" name="horizontalSlider_12">
+           <widget class="QSlider" name="shadows">
             <property name="minimum">
-             <number>-45</number>
+             <number>-100</number>
             </property>
             <property name="maximum">
-             <number>45</number>
+             <number>100</number>
             </property>
             <property name="tracking">
              <bool>true</bool>
@@ -1243,8 +1243,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>98</width>
-        <height>28</height>
+        <width>281</width>
+        <height>305</height>
        </rect>
       </property>
       <attribute name="label">
@@ -1315,10 +1315,10 @@
              <bool>true</bool>
             </property>
             <property name="minimum">
-             <number>-45</number>
+             <number>-100</number>
             </property>
             <property name="maximum">
-             <number>45</number>
+             <number>100</number>
             </property>
             <property name="tracking">
              <bool>true</bool>
@@ -1429,10 +1429,10 @@
              <bool>false</bool>
             </property>
             <property name="minimum">
-             <number>-45</number>
+             <number>-100</number>
             </property>
             <property name="maximum">
-             <number>45</number>
+             <number>100</number>
             </property>
             <property name="tracking">
              <bool>true</bool>
@@ -1551,10 +1551,10 @@
         <item>
          <widget class="QSlider" name="clarity">
           <property name="minimum">
-           <number>-45</number>
+           <number>-100</number>
           </property>
           <property name="maximum">
-           <number>45</number>
+           <number>100</number>
           </property>
           <property name="tracking">
            <bool>false</bool>
@@ -1646,10 +1646,10 @@
         <item>
          <widget class="QSlider" name="vignette">
           <property name="minimum">
-           <number>-45</number>
+           <number>-100</number>
           </property>
           <property name="maximum">
-           <number>45</number>
+           <number>100</number>
           </property>
           <property name="tracking">
            <bool>true</bool>
