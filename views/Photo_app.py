@@ -232,7 +232,10 @@ class EditWindow(QDialog):
         self.show_img()
 
     def invert(self):
-        img = cv2.imread(fname[0], cv2.IMREAD_UNCHANGED)
+        im = Image.open(fname[0])
+        new_path = path + "/" + name + ".png"
+        im.save(new_path)
+        img = cv2.imread(new_path, cv2.IMREAD_UNCHANGED)
         img1 = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
         # plt.figure(figsize=(10, 10))
