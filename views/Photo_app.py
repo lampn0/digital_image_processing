@@ -472,13 +472,6 @@ class EditWindow(QDialog):
         cv2.imwrite(new_path, img_result)
         self.display.setPixmap(QPixmap(new_path).scaled(1041, 721, QtCore.Qt.KeepAspectRatio))
 
-        # plt.imshow(img_result, norm=NoNorm())
-        # plt.xticks([]), plt.yticks([])
-        #
-        # new_path = path + "/" + name + "_tmp.png"
-        # plt.savefig(new_path)
-        # self.display.setPixmap(QPixmap(new_path).scaled(1041, 721, QtCore.Qt.KeepAspectRatio))
-
     def cool(self):
         img_result = CoolingFilter()
         img_result = img_result.render(img_edit)
@@ -488,13 +481,6 @@ class EditWindow(QDialog):
         cv2.imwrite(new_path, img_result)
         self.display.setPixmap(QPixmap(new_path).scaled(1041, 721, QtCore.Qt.KeepAspectRatio))
 
-        # plt.imshow(img_result)
-        # plt.xticks([]), plt.yticks([])
-        #
-        # new_path = path + "/" + name + "_tmp.png"
-        # plt.savefig(new_path)
-        # self.display.setPixmap(QPixmap(new_path).scaled(1041, 721, QtCore.Qt.KeepAspectRatio))
-
     def lpf(self):
         img = cv2.imread(fname[0], 0)
         camLow = lowPassButterWorth(img, 50, 1)
@@ -503,13 +489,6 @@ class EditWindow(QDialog):
         cv2.imwrite(new_path, camLow)
         self.display.setPixmap(QPixmap(new_path).scaled(1041, 721, QtCore.Qt.KeepAspectRatio))
 
-        # plt.imshow(camLow, cmap='gray')
-        # plt.xticks([]), plt.yticks([])
-        #
-        # new_path = path + "/" + name + "_tmp.png"
-        # plt.savefig(new_path)
-        # self.display.setPixmap(QPixmap(new_path).scaled(1041, 721, QtCore.Qt.KeepAspectRatio))
-
     def hpf(self):
         img = cv2.imread(fname[0], 0)
         camHigh = highPassGaussian(img, 50)
@@ -517,13 +496,6 @@ class EditWindow(QDialog):
         new_path = path + "/" + name + "_tmp.png"
         cv2.imwrite(new_path, camHigh)
         self.display.setPixmap(QPixmap(new_path).scaled(1041, 721, QtCore.Qt.KeepAspectRatio))
-
-        # plt.imshow(camHigh, cmap='gray')
-        # plt.xticks([]), plt.yticks([])
-        #
-        # new_path = path + "/" + name + "_tmp.png"
-        # plt.savefig(new_path)
-        # self.display.setPixmap(QPixmap(new_path).scaled(1041, 721, QtCore.Qt.KeepAspectRatio))
 
     def mean(self):
         img = cv2.imread(fname[0])
@@ -573,12 +545,6 @@ class EditWindow(QDialog):
         self.Contrast_value.setText(value)
         effect = controller(img_edit, self.exposure.value(), self.contrast.value())
         cv2.imshow('Effect', effect)
-        # plt.imshow(effect, norm=NoNorm())
-        # plt.xticks([]), plt.yticks([])
-        #
-        # new_path = path + "/" + name + "_tmp.png"
-        # plt.savefig(new_path)
-        # self.display.setPixmap(QPixmap(new_path).scaled(1041, 721, QtCore.Qt.KeepAspectRatio))
 
     def Exposure(self):
         value = str(self.exposure.value())
