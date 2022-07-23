@@ -32,7 +32,7 @@ class WarmingFilter:
                                             [0, 30, 80, 120, 192])
 
     def render(self, img_rgb):
-        c_r, c_g, c_b = cv2.split(img_rgb)
+        c_b, c_g, c_r = cv2.split(img_rgb)
         c_r = cv2.LUT(c_r, self.incr_ch_lut).astype(np.uint8)
         c_b = cv2.LUT(c_b, self.decr_ch_lut).astype(np.uint8)
         img_rgb = cv2.merge((c_r, c_g, c_b))
@@ -53,7 +53,7 @@ class CoolingFilter:
                                             [0, 30, 80, 120, 192])
 
     def render(self, img_rgb):
-        c_r, c_g, c_b = cv2.split(img_rgb)
+        c_b, c_g, c_r = cv2.split(img_rgb)
         c_r = cv2.LUT(c_r, self.decr_ch_lut).astype(np.uint8)
         c_b = cv2.LUT(c_b, self.incr_ch_lut).astype(np.uint8)
         img_rgb = cv2.merge((c_r, c_g, c_b))
@@ -464,8 +464,9 @@ class EditWindow(QDialog):
         self.display.setPixmap(QPixmap(new_path).scaled(1041, 721, QtCore.Qt.KeepAspectRatio))
 
     def warm(self):
-        img_result = CoolingFilter()
+        img_result = WarmingFilter()
         img_result = img_result.render(img_edit)
+        img_result = cv2.cvtColor(img_result, cv2.COLOR_BGR2RGB)
 
         new_path = path + "/" + name + "_tmp.png"
         cv2.imwrite(new_path, img_result)
@@ -479,8 +480,9 @@ class EditWindow(QDialog):
         # self.display.setPixmap(QPixmap(new_path).scaled(1041, 721, QtCore.Qt.KeepAspectRatio))
 
     def cool(self):
-        img_result = WarmingFilter()
+        img_result = CoolingFilter()
         img_result = img_result.render(img_edit)
+        img_result = cv2.cvtColor(img_result, cv2.COLOR_BGR2RGB)
 
         new_path = path + "/" + name + "_tmp.png"
         cv2.imwrite(new_path, img_result)
