@@ -539,96 +539,47 @@
       </item>
       <item>
        <layout class="QGridLayout" name="gridLayout">
-        <item row="2" column="2">
-         <widget class="QPushButton" name="HPF">
+        <item row="4" column="4">
+         <widget class="QPushButton" name="Laplacian">
           <property name="text">
-           <string>HPF</string>
+           <string>Laplacian</string>
           </property>
           <property name="flat">
            <bool>false</bool>
           </property>
          </widget>
         </item>
-        <item row="4" column="2">
-         <widget class="QPushButton" name="Median">
+        <item row="2" column="4">
+         <widget class="QPushButton" name="Equalize">
           <property name="text">
-           <string>Median</string>
+           <string>Equalize</string>
           </property>
           <property name="flat">
            <bool>false</bool>
           </property>
          </widget>
         </item>
-        <item row="0" column="4">
-         <widget class="QPushButton" name="Invert">
+        <item row="7" column="0">
+         <widget class="QPushButton" name="Bilateral">
           <property name="text">
-           <string>Invert</string>
+           <string>Bilateral</string>
           </property>
           <property name="flat">
            <bool>false</bool>
           </property>
          </widget>
         </item>
-        <item row="0" column="2">
-         <widget class="QPushButton" name="Sobel">
-          <property name="text">
-           <string>Sobel</string>
-          </property>
-          <property name="flat">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="2">
-         <widget class="Line" name="line_3">
+        <item row="1" column="4">
+         <widget class="Line" name="line_7">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
          </widget>
         </item>
-        <item row="3" column="2">
-         <widget class="Line" name="line_4">
+        <item row="1" column="0">
+         <widget class="Line" name="line_6">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="0">
-         <widget class="QPushButton" name="Mean">
-          <property name="text">
-           <string>Mean</string>
-          </property>
-          <property name="flat">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="Line" name="line">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="3">
-         <widget class="Line" name="line_2">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QPushButton" name="Original">
-          <property name="font">
-           <font>
-            <pointsize>12</pointsize>
-           </font>
-          </property>
-          <property name="text">
-           <string>Original</string>
-          </property>
-          <property name="flat">
-           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -639,13 +590,6 @@
           </property>
           <property name="flat">
            <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="Line" name="line_6">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
           </property>
          </widget>
         </item>
@@ -670,17 +614,93 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="4">
-         <widget class="Line" name="line_7">
+        <item row="0" column="4">
+         <widget class="QPushButton" name="Invert">
+          <property name="text">
+           <string>Invert</string>
+          </property>
+          <property name="flat">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QPushButton" name="Sobel">
+          <property name="text">
+           <string>Sobel</string>
+          </property>
+          <property name="flat">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="2">
+         <widget class="QPushButton" name="Median">
+          <property name="text">
+           <string>Median</string>
+          </property>
+          <property name="flat">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="2">
+         <widget class="Line" name="line_4">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
          </widget>
         </item>
-        <item row="6" column="2">
-         <widget class="Line" name="line_5">
+        <item row="4" column="3">
+         <widget class="Line" name="line_2">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QPushButton" name="Mean">
+          <property name="text">
+           <string>Mean</string>
+          </property>
+          <property name="flat">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="Line" name="line_3">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="Line" name="line">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QPushButton" name="Original">
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Original</string>
+          </property>
+          <property name="flat">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="3">
+         <widget class="Line" name="line_17">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
           </property>
          </widget>
         </item>
@@ -691,43 +711,8 @@
           </property>
          </widget>
         </item>
-        <item row="6" column="0">
-         <widget class="Line" name="line_11">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="3">
-         <widget class="Line" name="line_15">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="1">
-         <widget class="Line" name="line_13">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="Line" name="line_14">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-         </widget>
-        </item>
         <item row="2" column="3">
          <widget class="Line" name="line_16">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="7" column="3">
-         <widget class="Line" name="line_17">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
           </property>
@@ -746,30 +731,45 @@
           </property>
          </spacer>
         </item>
-        <item row="2" column="4">
-         <widget class="QPushButton" name="Candy">
-          <property name="text">
-           <string>Candy</string>
-          </property>
-          <property name="flat">
-           <bool>false</bool>
+        <item row="0" column="1">
+         <widget class="Line" name="line_14">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
           </property>
          </widget>
         </item>
-        <item row="4" column="4">
-         <widget class="QPushButton" name="Laplacian">
-          <property name="text">
-           <string>Laplacian</string>
-          </property>
-          <property name="flat">
-           <bool>false</bool>
+        <item row="0" column="3">
+         <widget class="Line" name="line_15">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
           </property>
          </widget>
         </item>
-        <item row="7" column="0">
-         <widget class="QPushButton" name="Bilateral">
+        <item row="6" column="0">
+         <widget class="Line" name="line_11">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="2">
+         <widget class="Line" name="line_5">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="Line" name="line_13">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="2">
+         <widget class="QPushButton" name="HPF">
           <property name="text">
-           <string>Bilateral</string>
+           <string>HPF</string>
           </property>
           <property name="flat">
            <bool>false</bool>
@@ -815,7 +815,7 @@
       </rect>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="p_light">
       <property name="geometry">
@@ -1782,11 +1782,22 @@
      <height>16777215</height>
     </size>
    </property>
+   <property name="font">
+    <font>
+     <family>Terminal</family>
+     <pointsize>20</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
    <property name="layoutDirection">
     <enum>Qt::LeftToRight</enum>
    </property>
    <property name="autoFillBackground">
     <bool>true</bool>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
    </property>
    <property name="frameShape">
     <enum>QFrame::Box</enum>
@@ -1795,7 +1806,7 @@
     <number>2</number>
    </property>
    <property name="text">
-    <string/>
+    <string>HELLO WORLD!!! THIS IS A DISPLAY</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>

@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import NoNorm
 from scipy import ndimage
 from scipy.interpolate import UnivariateSpline
-from PIL import Image, ImageEnhance, ImageDraw, ImageColor, ImageFilter
+from PIL import Image
 import math
 
 
@@ -26,11 +26,10 @@ def _create_LUT_8UC1(x, y):
 
 class WarmingFilter:
     def __init__(self):
-        x = [0, 64, 128, 192, 256]
-        y1 = [0, 70, 140, 210, 256]
-        y2 = [0, 30, 80, 120, 192]
-        self.incr_ch_lut = _create_LUT_8UC1(x, y1)
-        self.decr_ch_lut = _create_LUT_8UC1(x, y2)
+        self.incr_ch_lut = _create_LUT_8UC1([0, 64, 128, 192, 256],
+                                            [0, 70, 140, 210, 256])
+        self.decr_ch_lut = _create_LUT_8UC1([0, 64, 128, 192, 256],
+                                            [0, 30, 80, 120, 192])
 
     def render(self, img_rgb):
         c_r, c_g, c_b = cv2.split(img_rgb)
@@ -356,7 +355,7 @@ class EditWindow(QDialog):
         self.Mean.clicked.connect(self.mean)
         self.Median.clicked.connect(self.median)
         self.Laplacian.clicked.connect(self.laplacian)
-        self.Bilateral.clicked.connect(self.bilateral)
+        self.Equalize.clicked.connect(self.equalize)
 
     def back(self):
         back = MainWindow()
@@ -417,9 +416,9 @@ class EditWindow(QDialog):
         img = convolution(img_show, kernel_gauss)
 
         # img_gauss -> sobelx
-        SobelFilterX = SobelFilter(img, 1, 0)
+        # SobelFilterX = SobelFilter(img, 1, 0)
         # img_gauss -> sobely
-        SobelFilterY = SobelFilter(img, 0, 1)
+        # SobelFilterY = SobelFilter(img, 0, 1)
         # img_gauss -> sobelxy
         SobelFilterXY = SobelFilter(img, 1, 1)
 
@@ -465,44 +464,64 @@ class EditWindow(QDialog):
         self.display.setPixmap(QPixmap(new_path).scaled(1041, 721, QtCore.Qt.KeepAspectRatio))
 
     def warm(self):
-        img_result = WarmingFilter()
-        img_result = img_result.render(img_edit)
-        plt.imshow(img_result)
-        plt.xticks([]), plt.yticks([])
-
-        new_path = path + "/" + name + "_tmp.png"
-        plt.savefig(new_path)
-        self.display.setPixmap(QPixmap(new_path).scaled(1041, 721, QtCore.Qt.KeepAspectRatio))
-
-    def cool(self):
         img_result = CoolingFilter()
         img_result = img_result.render(img_edit)
-        plt.imshow(img_result)
-        plt.xticks([]), plt.yticks([])
 
         new_path = path + "/" + name + "_tmp.png"
-        plt.savefig(new_path)
+        cv2.imwrite(new_path, img_result)
         self.display.setPixmap(QPixmap(new_path).scaled(1041, 721, QtCore.Qt.KeepAspectRatio))
+
+        # plt.imshow(img_result, norm=NoNorm())
+        # plt.xticks([]), plt.yticks([])
+        #
+        # new_path = path + "/" + name + "_tmp.png"
+        # plt.savefig(new_path)
+        # self.display.setPixmap(QPixmap(new_path).scaled(1041, 721, QtCore.Qt.KeepAspectRatio))
+
+    def cool(self):
+        img_result = WarmingFilter()
+        img_result = img_result.render(img_edit)
+
+        new_path = path + "/" + name + "_tmp.png"
+        cv2.imwrite(new_path, img_result)
+        self.display.setPixmap(QPixmap(new_path).scaled(1041, 721, QtCore.Qt.KeepAspectRatio))
+
+        # plt.imshow(img_result)
+        # plt.xticks([]), plt.yticks([])
+        #
+        # new_path = path + "/" + name + "_tmp.png"
+        # plt.savefig(new_path)
+        # self.display.setPixmap(QPixmap(new_path).scaled(1041, 721, QtCore.Qt.KeepAspectRatio))
 
     def lpf(self):
         img = cv2.imread(fname[0], 0)
         camLow = lowPassButterWorth(img, 50, 1)
-        plt.imshow(camLow, cmap='gray')
-        plt.xticks([]), plt.yticks([])
 
         new_path = path + "/" + name + "_tmp.png"
-        plt.savefig(new_path)
+        cv2.imwrite(new_path, camLow)
         self.display.setPixmap(QPixmap(new_path).scaled(1041, 721, QtCore.Qt.KeepAspectRatio))
+
+        # plt.imshow(camLow, cmap='gray')
+        # plt.xticks([]), plt.yticks([])
+        #
+        # new_path = path + "/" + name + "_tmp.png"
+        # plt.savefig(new_path)
+        # self.display.setPixmap(QPixmap(new_path).scaled(1041, 721, QtCore.Qt.KeepAspectRatio))
 
     def hpf(self):
         img = cv2.imread(fname[0], 0)
         camHigh = highPassGaussian(img, 50)
-        plt.imshow(camHigh, cmap='gray')
-        plt.xticks([]), plt.yticks([])
 
         new_path = path + "/" + name + "_tmp.png"
-        plt.savefig(new_path)
+        cv2.imwrite(new_path, camHigh)
         self.display.setPixmap(QPixmap(new_path).scaled(1041, 721, QtCore.Qt.KeepAspectRatio))
+
+        # plt.imshow(camHigh, cmap='gray')
+        # plt.xticks([]), plt.yticks([])
+        #
+        # new_path = path + "/" + name + "_tmp.png"
+        # plt.savefig(new_path)
+        # self.display.setPixmap(QPixmap(new_path).scaled(1041, 721, QtCore.Qt.KeepAspectRatio))
 
     def mean(self):
         img = cv2.imread(fname[0])
@@ -527,16 +546,25 @@ class EditWindow(QDialog):
     def laplacian(self):
         img = cv2.imread(fname[0], cv2.IMREAD_GRAYSCALE)
         laplacian_img = LaplaceFilter(img)
+        laplacian_add = laplacian_img + img
 
-        plt.imshow(laplacian_img, cmap='gray')
+        plt.subplot(121), plt.imshow(laplacian_img, cmap='gray', vmin=0, vmax=255)
+        plt.xticks([]), plt.yticks([])
+        plt.subplot(122), plt.imshow(laplacian_add, cmap='gray', vmin=0, vmax=255)
         plt.xticks([]), plt.yticks([])
 
         new_path = path + "/" + name + "_tmp.png"
         plt.savefig(new_path)
         self.display.setPixmap(QPixmap(new_path).scaled(1041, 721, QtCore.Qt.KeepAspectRatio))
 
-    def bilateral(self):
-        print()
+    def equalize(self):
+        img = cv2.imread(fname[0], cv2.IMREAD_UNCHANGED)
+        img1 = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        equ = cv2.equalizeHist(img1)
+
+        new_path = path + "/" + name + "_tmp.png"
+        cv2.imwrite(new_path, equ)
+        self.display.setPixmap(QPixmap(new_path).scaled(1041, 721, QtCore.Qt.KeepAspectRatio))
 
     def Contrast(self):
         value = str(self.contrast.value())

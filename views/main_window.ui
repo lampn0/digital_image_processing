@@ -163,20 +163,40 @@ color: rgb(0, 0, 127);</string>
       <height>611</height>
      </size>
     </property>
+    <property name="font">
+     <font>
+      <family>Terminal</family>
+      <pointsize>20</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+      <underline>false</underline>
+      <strikeout>false</strikeout>
+      <kerning>false</kerning>
+     </font>
+    </property>
     <property name="layoutDirection">
      <enum>Qt::LeftToRight</enum>
     </property>
     <property name="autoFillBackground">
      <bool>true</bool>
     </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
     <property name="frameShape">
      <enum>QFrame::Box</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
     </property>
     <property name="lineWidth">
      <number>2</number>
     </property>
     <property name="text">
-     <string/>
+     <string>HELLO WORLD!!! THIS IS A DISPLAY</string>
+    </property>
+    <property name="textFormat">
+     <enum>Qt::PlainText</enum>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
