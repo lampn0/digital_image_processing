@@ -42,7 +42,7 @@ def highPassGaussian(im, cutOff):
 
 
 if __name__ == '__main__':
-    img = cv2.imread("2021-03-14_orig.jpg", 0)
+    img = cv2.imread("../views/2021-03-14_orig.png", 0)
     camLow = lowPassButterWorth(img, 50, 1)
     plt.imshow(camLow, cmap='gray')
     plt.savefig("CameraManLow.png")

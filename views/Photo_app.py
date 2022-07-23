@@ -13,11 +13,55 @@ from IPython.display import Image
 import matplotlib.pyplot as plt
 from matplotlib.colors import NoNorm
 from scipy import ndimage
+from scipy.interpolate import UnivariateSpline
 from PIL import Image, ImageEnhance, ImageDraw, ImageColor, ImageFilter
 import math
 
 
-def convolute(image, kernel):
+def _create_LUT_8UC1(x, y):
+  spl = UnivariateSpline(x, y)
+  return spl(range(256))
+
+class WarmingFilter:
+    def __init__(self):
+        x = [0, 64, 128, 192, 256]
+        y1 = [0, 70, 140, 210, 256]
+        y2 = [0, 30,  80, 120, 192]
+        self.incr_ch_lut = _create_LUT_8UC1(x, y1)
+        self.decr_ch_lut = _create_LUT_8UC1(x, y2)
+
+    def render(self, img_rgb):
+        c_r, c_g, c_b = cv2.split(img_rgb)
+        c_r = cv2.LUT(c_r, self.incr_ch_lut).astype(np.uint8)
+        c_b = cv2.LUT(c_b, self.decr_ch_lut).astype(np.uint8)
+        img_rgb = cv2.merge((c_r, c_g, c_b))
+
+        # increase color saturation
+        c_h, c_s, c_v = cv2.split(cv2.cvtColor(img_rgb,
+                                               cv2.COLOR_RGB2HSV))
+        c_s = cv2.LUT(c_s, self.incr_ch_lut).astype(np.uint8)
+        return cv2.cvtColor(cv2.merge((c_h, c_s, c_v)),
+                            cv2.COLOR_HSV2RGB)
+
+
+class CoolingFilter:
+    def __init__(self):
+        self.incr_ch_lut = _create_LUT_8UC1([0, 64, 128, 192, 256],
+                                            [0, 70, 140, 210, 256])
+        self.decr_ch_lut = _create_LUT_8UC1([0, 64, 128, 192, 256],
+                                            [0, 30,  80, 120, 192])
+    def render(self, img_rgb):
+        c_r, c_g, c_b = cv2.split(img_rgb)
+        c_r = cv2.LUT(c_r, self.decr_ch_lut).astype(np.uint8)
+        c_b = cv2.LUT(c_b, self.incr_ch_lut).astype(np.uint8)
+        img_rgb = cv2.merge((c_r, c_g, c_b))
+
+        # decrease color saturation
+        c_h, c_s, c_v = cv2.split(cv2.cvtColor(img_rgb, cv2.COLOR_RGB2HSV))
+        c_s = cv2.LUT(c_s, self.decr_ch_lut).astype(np.uint8)
+        return cv2.cvtColor(cv2.merge((c_h, c_s, c_v)), cv2.COLOR_HSV2RGB)
+
+def convolution(image, kernel):
     # Lật ma trận mặt nạ
     # lấy kích thước ma trận mặt nạ
     r, c = kernel.shape
@@ -63,8 +107,8 @@ def SobelFilter(image, dx=1, dy=1):
     X = np.array([[1, 0, -1], [2, 0, -2], [1, 0, -1]])
     Y = np.array([[1, 2, 1], [0, 0, 0], [-1, -2, -1]])
 
-    sobel_x = convolute(image, X)
-    sobel_y = convolute(image, Y)
+    sobel_x = convolution(image, X)
+    sobel_y = convolution(image, Y)
 
     if dx == 1 and dy == 0:
         return sobel_x
@@ -224,6 +268,8 @@ class EditWindow(QDialog):
         self.clarity.valueChanged.connect(self.Clarity)
         self.vignette.valueChanged.connect(self.Vignette)
         self.btn_cancel.clicked.connect(self.cancel)
+        self.Cool.clicked.connect(self.cool)
+        self.Warm.clicked.connect(self.warm)
 
     def back(self):
         back = MainWindow()
@@ -281,7 +327,7 @@ class EditWindow(QDialog):
 
         # 2: img_gray-> img_gauss
         kernel_gauss = createGaussianKernel(3, 1)
-        img = convolute(img_show, kernel_gauss)
+        img = convolution(img_show, kernel_gauss)
 
         # img_gauss -> sobelx
         SobelFilterX = SobelFilter(img, 1, 0)
@@ -326,6 +372,26 @@ class EditWindow(QDialog):
                     new_img[i, j] = v
 
         plt.imshow(new_img, cmap='gray', norm=NoNorm())
+        plt.xticks([]), plt.yticks([])
+
+        new_path = path + "/" + name + "_tmp.png"
+        plt.savefig(new_path)
+        self.display.setPixmap(QPixmap(new_path).scaled(1041, 721, QtCore.Qt.KeepAspectRatio))
+
+    def warm(self):
+        img_result = WarmingFilter()
+        img_result = img_result.render(img_edit)
+        plt.imshow(img_result, norm=NoNorm())
+        plt.xticks([]), plt.yticks([])
+
+        new_path = path + "/" + name + "_tmp.png"
+        plt.savefig(new_path)
+        self.display.setPixmap(QPixmap(new_path).scaled(1041, 721, QtCore.Qt.KeepAspectRatio))
+
+    def cool(self):
+        img_result = CoolingFilter()
+        img_result = img_result.render(img_edit)
+        plt.imshow(img_result, norm=NoNorm())
         plt.xticks([]), plt.yticks([])
 
         new_path = path + "/" + name + "_tmp.png"
