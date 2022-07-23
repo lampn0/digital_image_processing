@@ -18,49 +18,52 @@ import math
 
 
 def convolute(image, kernel):
-    #lật ma trận kernel
-    r,c = kernel.shape
-    flip_kernel = np.zeros((r,c), np.float32)
-    h = 0
-    if ((r==c) and (r%2)):
-        h = int((r-1)/2)   #h=1
-        for i in range(-h, h+1):    #i -1 -> 1
-            for j in range(-h, h+1):   #j -1 -> 1
-                flip_kernel[i+h, j+h] = kernel[-i+h, -j+h]
+    # Lật ma trận mặt nạ
+    # lấy kích thước ma trận mặt nạ
+    r, c = kernel.shape
 
-    #Thêm padding cho ảnh đầu vào
+    # Tạo mảng 2 chiều toàn 0 có kích thước rxc
+    flip_kernel = np.zeros((r, c), np.float32)
+    h = 0
+
+    # Kích thước ma trận lẻ trả về True
+    if (r == c) and (r % 2):
+        h = int((r - 1) / 2)  # h=1
+        for i in range(-h, h + 1):  # i -1 -> 1
+            for j in range(-h, h + 1):  # j -1 -> 1
+                flip_kernel[i + h, j + h] = kernel[-i + h, -j + h]
+
+    # Thêm padding cho ảnh đầu vào
     m, n = image.shape
-    padding_image = np.zeros((m+2*h, n+2*h), np.float32)
+    padding_image = np.zeros((m + 2 * h, n + 2 * h), np.float32)
     padding_image[h:-h, h:-h] = image
 
-    #Ảnh sau khi tích chập
+    # Ảnh sau khi tích chập
     convolute_image = np.zeros((m, n), np.float32)
     for i in range(m):
         for j in range(n):
-            convolute_image[i, j] = (flip_kernel * padding_image[i: i+r, j: j+r]).sum()
+            convolute_image[i, j] = (flip_kernel * padding_image[i: i + r, j: j + r]).sum()
     return convolute_image
 
-def createGaussianKernel(kernel_size,sigma):
-    h=kernel_size//2     #h = int(kernel_size/2)
+
+def createGaussianKernel(kernel_size, sigma):
+    h = kernel_size // 2  # h = int(kernel_size/2)
     s = 2.0 * sigma * sigma
     # sum = 0
-    kernel=np.zeros((kernel_size,kernel_size), np.float)
+    kernel = np.zeros((kernel_size, kernel_size), np.float)
     for i in range(kernel_size):
         for j in range(kernel_size):
-            r = np.sqrt(np.square(i-h) +np.square(j-h))
-            kernel[i,j] = (np.exp(-(r * r) / s)) / (math.pi * s)
-    kernel = kernel/kernel.sum()
+            r = np.sqrt(np.square(i - h) + np.square(j - h))
+            kernel[i, j] = (np.exp(-(r * r) / s)) / (math.pi * s)
+    kernel = kernel / kernel.sum()
     return kernel
 
 
-def SobelFilter(image, gauss_ksize=5, dx=1, dy=1, threshold=60):
-    # GaussKernel = createGaussianKernel(gauss_ksize,1)
+def SobelFilter(image, dx=1, dy=1):
     X = np.array([[1, 0, -1], [2, 0, -2], [1, 0, -1]])
     Y = np.array([[1, 2, 1], [0, 0, 0], [-1, -2, -1]])
 
-    # kernel_x = convolute(GaussKernel,X)
     sobel_x = convolute(image, X)
-    # kernel_y = convolute(GaussKernel,Y)
     sobel_y = convolute(image, Y)
 
     if dx == 1 and dy == 0:
@@ -68,44 +71,13 @@ def SobelFilter(image, gauss_ksize=5, dx=1, dy=1, threshold=60):
     if dx == 0 and dy == 1:
         return sobel_y
 
-    # abs_sobel_x = np.absolute(sobel_x)
-    # img_sobel_x = np.uint8(abs_sobel_x)
-    # abs_sobel_y = np.absolute(sobel_y)
-    # img_sobel_y = np.uint8(abs_sobel_y)
-
-    # sobelxy = img_sobel_x + img_sobel_y
-
-    # sobelxy = np.sqrt(np.square(sobel_x) + np.square(sobel_y))
-
     abs_grad_x = cv2.convertScaleAbs(sobel_x)  # |src(I)∗alpha+beta|
     abs_grad_y = cv2.convertScaleAbs(sobel_y)
 
-    # sobel_xy = cv.addWeighted(abs_grad_x, 0.5, abs_grad_y, 0.5, 0)
-    alpha = 0.5
-    beta = 0.5
-    gamma = 0
-    sobel_xy = abs_grad_x * alpha + abs_grad_y * beta + gamma
-
-    # sobel = cv.addWeighted(abs_sobel_x, 0.5, abs_sobel_y, 0.5, 0)
-    # [src1, alpha, src2, beta, gamma[, dst[, dtype]]
-    # dst = src1*alpha + src2*beta + gamma
-    # void cv::addWeighted	(	InputArray 	src1, double 	alpha, InputArray 	src2, double 	beta,double 	gamma,OutputArray 	dst,int 	dtype = -1)
-
-    # sobel = sobel_x + sobel_y
-    # sobel = image + sobel
-
-    # Loại bỏ những pixel yếu để tăng độ sắc nét của cạnh
-    # sobelxy = np.float64(sobel_xy)
-    # for i in range(sobelxy.shape[0]):
-    #     for j in range(sobelxy.shape[1]):
-    #         if sobelxy[i][j] < threshold:
-    #             sobelxy[i][j] = 0
-    #         else:
-    #             sobelxy[i][j] = 255
+    sobel_xy = cv2.addWeighted(abs_grad_x, 0.5, abs_grad_y, 0.5, 0)
     return sobel_xy
 
 
-# from giaodienmahoa import Ui_Dialog
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
@@ -198,9 +170,10 @@ def cacel():
     msg.setIcon(QtWidgets.QMessageBox.Warning)
     msg.exec_()
 
+
 def controller(img, brightness=255, contrast=127):
-    brightness = int((brightness - 0) * (255 - (-255)) / (510 - 0) + (-255))
-    contrast = int((contrast - 0) * (127 - (-127)) / (254 - 0) + (-127))
+    brightness = int(brightness)
+    contrast = int(contrast)
 
     if brightness != 0:
         if brightness > 0:
@@ -224,11 +197,12 @@ def controller(img, brightness=255, contrast=127):
         Alpha = float(131 * (contrast + 127)) / (127 * (131 - contrast))
         Gamma = 127 * (1 - Alpha)
 
+        print(Alpha, Gamma)
         # The function addWeighted calculates
         # the weighted sum of two arrays
         cal = cv2.addWeighted(cal, Alpha, cal, 0, Gamma)
-
     return cal
+
 
 class EditWindow(QDialog):
     def __init__(self):
@@ -290,15 +264,15 @@ class EditWindow(QDialog):
 
     def sobel(self):
         # Here we read the image and bring it as an array
-        # im = Image.open(fname[0])
-        # _path = path + name + ".png"
-        # im.save(_path)
-        # original_image = imread(_path)
+        im = Image.open(fname[0])
+        _path = path + "/" + name + ".png"
+        im.save(_path)
+        original_image = imread(_path)
 
         # Next we apply the Sobel filter in the x and y directions to then calculate the output image
-        # dx, dy = ndimage.sobel(original_image, axis=0), ndimage.sobel(original_image, axis=1)
-        # sobel_filtered_image = np.hypot(dx, dy)  # is equal to ( dx ^ 2 + dy ^ 2 ) ^ 0.5
-        # sobel_filtered_image = sobel_filtered_image / np.max(sobel_filtered_image)  # normalization step
+        dx, dy = ndimage.sobel(original_image, axis=0), ndimage.sobel(original_image, axis=1)
+        sobel_filtered_image = np.hypot(dx, dy)  # is equal to ( dx ^ 2 + dy ^ 2 ) ^ 0.5
+        sobel_filtered_image = sobel_filtered_image / np.max(sobel_filtered_image)  # normalization step
 
         # Test bộ lọc Sobel
         # 1:img -> img_gray
@@ -310,11 +284,11 @@ class EditWindow(QDialog):
         img = convolute(img_show, kernel_gauss)
 
         # img_gauss -> sobelx
-        SobelFilterX = SobelFilter(img, 5, 1, 0)
+        SobelFilterX = SobelFilter(img, 1, 0)
         # img_gauss -> sobely
-        SobelFilterY = SobelFilter(img, 5, 0, 1)
+        SobelFilterY = SobelFilter(img, 0, 1)
         # img_gauss -> sobelxy
-        SobelFilterXY = SobelFilter(img, 5, 1, 1)
+        SobelFilterXY = SobelFilter(img, 1, 1)
 
         # img_gauss -> sobelx use openCV
         Sobelx = cv2.Sobel(img, cv2.CV_64F, 1, 0)
@@ -323,7 +297,10 @@ class EditWindow(QDialog):
         # img_gauss -> sobelxy use openCV
         Sobelxy = cv2.Sobel(img, cv2.CV_64F, 1, 1)
 
-        plt.imshow(SobelFilterXY, cmap='gray', vmin=0, vmax=255)
+
+        plt.subplot(121), plt.imshow(sobel_filtered_image), plt.title('Thư viện có sẵn')
+        plt.xticks([]), plt.yticks([])
+        plt.subplot(122), plt.imshow(SobelFilterXY, cmap='gray', vmin=0, vmax=255), plt.title('Tự tạo hàm')
         plt.xticks([]), plt.yticks([])
 
         new_path = path + "/" + name + "_tmp.png"
@@ -358,7 +335,7 @@ class EditWindow(QDialog):
     def Contrast(self):
         value = str(self.contrast.value())
         self.Contrast_value.setText(value)
-        effect = controller(img_edit, self.exposure.value() + 255, self.contrast.value() + 127)
+        effect = controller(img_edit, self.exposure.value(), self.contrast.value())
         cv2.imshow('Effect', effect)
         # plt.imshow(effect, norm=NoNorm())
         # plt.xticks([]), plt.yticks([])
@@ -370,7 +347,7 @@ class EditWindow(QDialog):
     def Exposure(self):
         value = str(self.exposure.value())
         self.Exposure_value.setText(value)
-        effect = controller(img_edit, self.exposure.value() + 255, self.contrast.value() + 127)
+        effect = controller(img_edit, self.exposure.value(), self.contrast.value())
         cv2.imshow('Effect', effect)
 
     def Highlights(self):

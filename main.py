@@ -1,5 +1,5 @@
 import cv2
-
+import numpy as np
 
 def BrightnessContrast(brightness=0):
     # getTrackbarPos returns the current
@@ -42,7 +42,12 @@ def controller(img, brightness=255, contrast=127):
 
         # The function addWeighted calculates
         # the weighted sum of two arrays
-        cal = cv2.addWeighted(cal, Alpha, cal, 0, Gamma)
+        cal1 = cv2.addWeighted(cal, Alpha, cal, 0, Gamma)
+        print("=================================================")
+        print(cal1)
+        cal2 = cal * Alpha + Gamma
+        print(".................................................")
+        print(cal2)
 
     # putText renders the specified text string in the image.
     cv2.putText(cal, 'B:{},C:{}'.format(brightness, contrast), (10, 30),
