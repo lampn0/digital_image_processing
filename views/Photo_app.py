@@ -8,6 +8,7 @@ from PyQt5.QtGui import QResizeEvent
 
 import cv2
 import numpy as np
+from numpy.fft import fft2, ifft2, fftshift, ifftshift
 from matplotlib.image import imread
 from IPython.display import Image
 import matplotlib.pyplot as plt
@@ -19,14 +20,15 @@ import math
 
 
 def _create_LUT_8UC1(x, y):
-  spl = UnivariateSpline(x, y)
-  return spl(range(256))
+    spl = UnivariateSpline(x, y)
+    return spl(range(256))
+
 
 class WarmingFilter:
     def __init__(self):
         x = [0, 64, 128, 192, 256]
         y1 = [0, 70, 140, 210, 256]
-        y2 = [0, 30,  80, 120, 192]
+        y2 = [0, 30, 80, 120, 192]
         self.incr_ch_lut = _create_LUT_8UC1(x, y1)
         self.decr_ch_lut = _create_LUT_8UC1(x, y2)
 
@@ -49,7 +51,8 @@ class CoolingFilter:
         self.incr_ch_lut = _create_LUT_8UC1([0, 64, 128, 192, 256],
                                             [0, 70, 140, 210, 256])
         self.decr_ch_lut = _create_LUT_8UC1([0, 64, 128, 192, 256],
-                                            [0, 30,  80, 120, 192])
+                                            [0, 30, 80, 120, 192])
+
     def render(self, img_rgb):
         c_r, c_g, c_b = cv2.split(img_rgb)
         c_r = cv2.LUT(c_r, self.decr_ch_lut).astype(np.uint8)
@@ -60,6 +63,37 @@ class CoolingFilter:
         c_h, c_s, c_v = cv2.split(cv2.cvtColor(img_rgb, cv2.COLOR_RGB2HSV))
         c_s = cv2.LUT(c_s, self.decr_ch_lut).astype(np.uint8)
         return cv2.cvtColor(cv2.merge((c_h, c_s, c_v)), cv2.COLOR_HSV2RGB)
+
+
+def lowPassButterWorth(im, cutOff, n):
+    h = im.shape[0]
+    w = im.shape[1]
+    fftim = fftshift(fft2(im))
+    x = np.linspace(-0.5, 0.5, w) * 2 * w
+    y = np.linspace(-0.5, 0.5, h) * 2 * h
+    u, v = np.meshgrid(x, y)
+    dis = np.sqrt(u ** 2 + v ** 2)
+    hhp = 1 / (1 + ((dis / cutOff) ** (2 * n)))
+    out_spec_centre = fftim * hhp
+    out_spec = ifftshift(out_spec_centre)
+    out = np.abs(ifft2(out_spec))
+    return out
+
+
+def highPassGaussian(im, cutOff):
+    h = im.shape[0]
+    w = im.shape[1]
+    fftim = fftshift(fft2(im))
+    x = np.linspace(-1, 1, w) * 2 * w
+    y = np.linspace(-1, 1, h) * 2 * h
+    u, v = np.meshgrid(x, y)
+    dis = np.sqrt(u ** 2 + v ** 2)
+    hhp = 1 - (np.exp(-(dis ** 2) / (2 * (cutOff ** 2))))
+    out_spec_centre = fftim * hhp
+    out_spec = ifftshift(out_spec_centre)
+    out = np.real(ifft2(out_spec))
+    return out
+
 
 def convolution(image, kernel):
     # Lật ma trận mặt nạ
@@ -120,6 +154,53 @@ def SobelFilter(image, dx=1, dy=1):
 
     sobel_xy = cv2.addWeighted(abs_grad_x, 0.5, abs_grad_y, 0.5, 0)
     return sobel_xy
+
+
+def meanFilter(image, kernel_size):
+    # Tạo kernel
+    kernel = np.ones((kernel_size, kernel_size), np.float32) / (kernel_size * kernel_size)
+
+    # tính tích chập
+    output = convolution(image, kernel)
+    return output
+
+
+def medianFilter(image, kernel_size):
+    s = kernel_size // 2  # lấy vị trí giữa
+    m, n = image.shape
+    # Thêm padding cho ảnh đầu vào
+    padded_image = np.zeros((m + 2 * s, n + 2 * s), int)
+    padded_image[s:-s, s:-s] = image
+    padded_image[:s, s:-s] = image[:s, :]
+    padded_image[-s:, s:-s] = image[-s:, :]
+    padded_image[s:-s, :s] = image[:, :s]
+    padded_image[s:-s, -s:] = image[:, -s:]
+    Kernel_len = kernel_size * kernel_size
+    # Tạo ma trận đầu ra
+    output = np.zeros((m, n), int)
+    for i in range(m):
+        for j in range(n):
+            array = np.zeros(Kernel_len, int)
+            for p in range(kernel_size):
+                for q in range(kernel_size):
+                    # đưa về ma trạn 1 chiều
+                    array[p * kernel_size + q] = padded_image[i + p, j + q]
+            array = np.sort(array)
+            output[i, j] = array[len(array) // 2]
+    return output
+
+
+def LaplaceFilter(image, kernel_type=1):
+    # Tạo kernel
+    if kernel_type == 2:
+        kernel = np.array([[-1, -1, -1], [-1, 8, -1], [-1, -1, -1]])
+    elif kernel_type == 3:
+        kernel = np.array([[1, -2, 1], [-2, 4, -2], [1, -2, 1]])
+    else:
+        kernel = np.array([[0, 1, 0], [1, -4, 1], [0, 1, 0]])
+
+    output = convolution(image, kernel)
+    return output
 
 
 class MainWindow(QMainWindow):
@@ -270,6 +351,12 @@ class EditWindow(QDialog):
         self.btn_cancel.clicked.connect(self.cancel)
         self.Cool.clicked.connect(self.cool)
         self.Warm.clicked.connect(self.warm)
+        self.LPF.clicked.connect(self.lpf)
+        self.HPF.clicked.connect(self.hpf)
+        self.Mean.clicked.connect(self.mean)
+        self.Median.clicked.connect(self.median)
+        self.Laplacian.clicked.connect(self.laplacian)
+        self.Bilateral.clicked.connect(self.bilateral)
 
     def back(self):
         back = MainWindow()
@@ -301,7 +388,7 @@ class EditWindow(QDialog):
             for j in range(img1.shape[1]):
                 new_img[i, j] = 255 - img1[i, j]
 
-        plt.imshow(new_img, cmap='gray', norm=NoNorm())
+        plt.imshow(new_img, cmap='gray')
         plt.xticks([]), plt.yticks([])
 
         new_path = path + "/" + name + "_tmp.png"
@@ -343,7 +430,6 @@ class EditWindow(QDialog):
         # img_gauss -> sobelxy use openCV
         Sobelxy = cv2.Sobel(img, cv2.CV_64F, 1, 1)
 
-
         plt.subplot(121), plt.imshow(sobel_filtered_image), plt.title('Thư viện có sẵn')
         plt.xticks([]), plt.yticks([])
         plt.subplot(122), plt.imshow(SobelFilterXY, cmap='gray', vmin=0, vmax=255), plt.title('Tự tạo hàm')
@@ -381,7 +467,7 @@ class EditWindow(QDialog):
     def warm(self):
         img_result = WarmingFilter()
         img_result = img_result.render(img_edit)
-        plt.imshow(img_result, norm=NoNorm())
+        plt.imshow(img_result)
         plt.xticks([]), plt.yticks([])
 
         new_path = path + "/" + name + "_tmp.png"
@@ -391,12 +477,66 @@ class EditWindow(QDialog):
     def cool(self):
         img_result = CoolingFilter()
         img_result = img_result.render(img_edit)
-        plt.imshow(img_result, norm=NoNorm())
+        plt.imshow(img_result)
         plt.xticks([]), plt.yticks([])
 
         new_path = path + "/" + name + "_tmp.png"
         plt.savefig(new_path)
         self.display.setPixmap(QPixmap(new_path).scaled(1041, 721, QtCore.Qt.KeepAspectRatio))
+
+    def lpf(self):
+        img = cv2.imread(fname[0], 0)
+        camLow = lowPassButterWorth(img, 50, 1)
+        plt.imshow(camLow, cmap='gray')
+        plt.xticks([]), plt.yticks([])
+
+        new_path = path + "/" + name + "_tmp.png"
+        plt.savefig(new_path)
+        self.display.setPixmap(QPixmap(new_path).scaled(1041, 721, QtCore.Qt.KeepAspectRatio))
+
+    def hpf(self):
+        img = cv2.imread(fname[0], 0)
+        camHigh = highPassGaussian(img, 50)
+        plt.imshow(camHigh, cmap='gray')
+        plt.xticks([]), plt.yticks([])
+
+        new_path = path + "/" + name + "_tmp.png"
+        plt.savefig(new_path)
+        self.display.setPixmap(QPixmap(new_path).scaled(1041, 721, QtCore.Qt.KeepAspectRatio))
+
+    def mean(self):
+        img = cv2.imread(fname[0])
+        mean_img = img
+        for i in range(3):
+            mean_img[:, :, i] = meanFilter(img[:, :, i], 5)
+
+        new_path = path + "/" + name + "_tmp.png"
+        cv2.imwrite(new_path, mean_img)
+        self.display.setPixmap(QPixmap(new_path).scaled(1041, 721, QtCore.Qt.KeepAspectRatio))
+
+    def median(self):
+        img = cv2.imread(fname[0])
+        median_img = img
+        for i in range(3):
+            median_img[:, :, i] = medianFilter(img[:, :, i], 5)
+
+        new_path = path + "/" + name + "_tmp.png"
+        cv2.imwrite(new_path, median_img)
+        self.display.setPixmap(QPixmap(new_path).scaled(1041, 721, QtCore.Qt.KeepAspectRatio))
+
+    def laplacian(self):
+        img = cv2.imread(fname[0], cv2.IMREAD_GRAYSCALE)
+        laplacian_img = LaplaceFilter(img)
+
+        plt.imshow(laplacian_img, cmap='gray')
+        plt.xticks([]), plt.yticks([])
+
+        new_path = path + "/" + name + "_tmp.png"
+        plt.savefig(new_path)
+        self.display.setPixmap(QPixmap(new_path).scaled(1041, 721, QtCore.Qt.KeepAspectRatio))
+
+    def bilateral(self):
+        print()
 
     def Contrast(self):
         value = str(self.contrast.value())
